@@ -10,11 +10,12 @@
   "author": "Darrien Singleton",
   "license": "MIT",
   "private": true,
-  "types": "main.d.ts",
   "devDependencies": {
     "@types/node": "^13.5.2",
+    "@types/sqlite3": "^3.1.6",
     "@types/ws": "^7.2.1",
     "discord.js": "discordjs/discord.js",
+    "sqlite3": "^4.1.1",
     "tslint": "^6.0.0",
     "typescript": "^3.7.5"
   }

@@ -2,6 +2,7 @@
 import { Client, Message } from 'discord.js';
 import MessageProcessor, { IMessageProcessor } from './message-processor';
 import CommandExecutor, { ICommandExecutor } from './command-executor';
+import DataAccess from './data-access';
 
 export interface IBot {
     
@@ -14,8 +15,9 @@ class Bot {
     commandExecutor: ICommandExecutor;
 
     constructor(token: string) {
+        const da = new DataAccess({databasePath: '../db/anker-store.db'});
         this.messageProcessor = new MessageProcessor();
-        this.commandExecutor = new CommandExecutor();
+        this.commandExecutor = new CommandExecutor(da);
         this.registerClient(token);
     }
 
