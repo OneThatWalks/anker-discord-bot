@@ -1,40 +1,34 @@
-import { MessageActionTypes } from "./message-processor";
-import { IDataAccess, Employee } from "./data-access";
+import { ICommandExecutor, IDataAccess, CommandExecutorContext, MessageActionTypes } from '../typings';
 
-export interface ICommandExecutor {
-    execute(action: MessageActionTypes): CommandExecutorContext;
-}
-
-export class CommandExecutorContext {
-    action: MessageActionTypes;
-    response: string;
-    // Future work clock
-    // responses: string[]
-}
 
 class CommandExecutor implements ICommandExecutor {
     /**
      * Creates a command executor
      * 
-     * @param dataAccess The data access service
+     * @param dataAccess {IDataAccess} The data access service
      */
     constructor(private dataAccess: IDataAccess) {
 
     }
 
-    execute(action: MessageActionTypes): CommandExecutorContext {
-        const context = new CommandExecutorContext();
-        context.action = action;
+    execute(context: CommandExecutorContext): CommandExecutorContext {
 
         switch (context.action) {
             case MessageActionTypes.SCHEDULE:
                 // get schedule
-                const em: Employee = {
-                    Name: 'Test',
-                    DiscordId: '123'
-                };
-                this.dataAccess.addEmployee(em);
-                context.response = '';
+                this.dataAccess.getEmployee(context.clientMessage.author.id).then(async (em) => {
+                    if (em == null) {
+                        em = {
+                            DiscordId: context.clientMessage.author.id,
+                            Name: context.clientMessage.author.username
+                        };
+                        await this.dataAccess.addEmployee(em);
+                    }
+    
+                    const schedule = this.dataAccess.getSchedule(em);
+                }).catch((err) => {
+                    throw err;
+                });
                 break;
             default:
                 break;

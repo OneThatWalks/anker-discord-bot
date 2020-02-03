@@ -1,12 +1,8 @@
-
 import { Client, Message } from 'discord.js';
-import MessageProcessor, { IMessageProcessor } from './message-processor';
-import CommandExecutor, { ICommandExecutor } from './command-executor';
-import DataAccess from './data-access';
-
-export interface IBot {
-    
-}
+import DataAccess from './data-access/data-access';
+import { IMessageProcessor, ICommandExecutor, CommandExecutorContext } from '../typings';
+import MessageProcessor from './message-processor';
+import CommandExecutor from './command-executor';
 
 class Bot {
 
@@ -14,8 +10,8 @@ class Bot {
     private messageProcessor: IMessageProcessor;
     commandExecutor: ICommandExecutor;
 
-    constructor(token: string) {
-        const da = new DataAccess({databasePath: '../db/anker-store.db'});
+    constructor(token: string, dbPath: string) {
+        const da = new DataAccess({databasePath: dbPath});
         this.messageProcessor = new MessageProcessor();
         this.commandExecutor = new CommandExecutor(da);
         this.registerClient(token);
@@ -37,7 +33,13 @@ class Bot {
                 const action = this.messageProcessor.process(message.content);
                 console.log(action);
 
-                const commandContext = this.commandExecutor.execute(action);
+                var commandContext: CommandExecutorContext = {
+                    action: action,
+                    clientMessage: message,
+                    response: null
+                };
+
+                this.commandExecutor.execute(commandContext);
                 console.log(commandContext);
 
                 if (commandContext.response) {

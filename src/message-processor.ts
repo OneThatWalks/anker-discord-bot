@@ -1,12 +1,4 @@
-
-export interface IMessageProcessor {
-    process(message: string): MessageActionTypes;
-}
-
-export enum MessageActionTypes {
-    NONE = 0,
-    SCHEDULE = 1,
-}
+import { IMessageProcessor, MessageActionTypes } from '../typings';
 
 class MessageProcessor implements IMessageProcessor {
 
