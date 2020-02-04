@@ -27,12 +27,14 @@ class MessageProcessor implements IMessageProcessor {
         // Trim ! off of command
         const command = content.substr(1).toLowerCase();
 
-        switch(command) {
+        switch (command) {
             case 'schedule':
             case 'view':
-            return MessageActionTypes.SCHEDULE;
+                return MessageActionTypes.SCHEDULE;
+            case 'authcode':
+                return MessageActionTypes.AUTH_CODE;
             default:
-            return MessageActionTypes.NONE;
+                return MessageActionTypes.NONE;
         }
     }
 

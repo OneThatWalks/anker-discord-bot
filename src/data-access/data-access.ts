@@ -1,8 +1,12 @@
 import { IDataAccess, DataAccessConfiguration, Employee } from '../../typings';
 import EmployeeRepo from './employee-repo';
+import ScheduleRepo from './schedule-repo';
 
 class DataAccess implements IDataAccess {
+    
+    
     private employeeRepo: EmployeeRepo;
+    private scheduleRepo: ScheduleRepo;
 
     /**
      * Creates an instance of the data access
@@ -11,6 +15,7 @@ class DataAccess implements IDataAccess {
      */
     constructor(private dataAccessConfiguration: DataAccessConfiguration) {
         this.employeeRepo = new EmployeeRepo(dataAccessConfiguration.databasePath);
+        this.scheduleRepo = new ScheduleRepo(dataAccessConfiguration.scheduleRepo);
     }
 
     addEmployee(employee: Employee): Promise<void> {
@@ -34,7 +39,16 @@ class DataAccess implements IDataAccess {
     }
 
     getSchedule(employee: Employee): any {
-        return 'Test';
+        return this.scheduleRepo.getSchedule(employee);
+    }
+
+    authorize(): void;
+    authorize(code: string): void;
+    authorize(code?: string) {
+        if (!code) {
+            return this.scheduleRepo.authorize();
+        }
+        return this.scheduleRepo.authorize(code);
     }
 
 }

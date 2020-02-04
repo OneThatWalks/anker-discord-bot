@@ -24,11 +24,23 @@ class CommandExecutor implements ICommandExecutor {
                         };
                         await this.dataAccess.addEmployee(em);
                     }
-    
+
                     const schedule = this.dataAccess.getSchedule(em);
                 }).catch((err) => {
                     throw err;
                 });
+                break;
+            case MessageActionTypes.AUTH_CODE:
+                const words = context.clientMessage.content.split(' ');
+                const authCodeWordIndex = words.findIndex(w => w.toLowerCase() === '!authcode');
+
+                if (authCodeWordIndex === -1) {
+                    throw new Error('Unexpected action error.  Auth code action detected but no command exists in message.');
+                }
+
+                const code = words[authCodeWordIndex + 1];
+
+                this.dataAccess.authorize(code);
                 break;
             default:
                 break;

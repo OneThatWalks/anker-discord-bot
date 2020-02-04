@@ -10,8 +10,12 @@ class Bot {
     private messageProcessor: IMessageProcessor;
     commandExecutor: ICommandExecutor;
 
-    constructor(token: string, dbPath: string) {
-        const da = new DataAccess({databasePath: dbPath});
+    constructor(token: string, dbPath: string, scheduleRepoClientId: string, scheduleRepoClientSecret: string, redirectUrl: string) {
+        const da = new DataAccess({databasePath: dbPath, scheduleRepo: {
+            clientId: scheduleRepoClientId,
+            clientSecret: scheduleRepoClientSecret,
+            redirectUrls: [redirectUrl]
+        }});
         this.messageProcessor = new MessageProcessor();
         this.commandExecutor = new CommandExecutor(da);
         this.registerClient(token);
