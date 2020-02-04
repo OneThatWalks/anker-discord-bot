@@ -19,7 +19,10 @@ class ScheduleRepo implements IScheduleRepo {
     getSchedule(employee: Employee) {
         const calendar = google.calendar({version: 'v3', auth: this.getClient()});
 
-        console.log(calendar.calendarList.list);
+        calendar.calendarList.list().then((val: any) => console.log(val));
+
+        // TODO: implement event searching for set calendar
+        // REMARKS: Calendar id can be found in calendar sharing settings
     }
 
     authorize(): void;
