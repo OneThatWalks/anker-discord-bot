@@ -1,3 +1,4 @@
+import { AppConfig } from './../typings/index.d';
 import { Client, Message } from 'discord.js';
 import DataAccess from './data-access/data-access';
 import { IMessageProcessor, ICommandExecutor, CommandExecutorContext } from '../typings';
@@ -10,15 +11,11 @@ class Bot {
     private messageProcessor: IMessageProcessor;
     commandExecutor: ICommandExecutor;
 
-    constructor(token: string, dbPath: string, scheduleRepoClientId: string, scheduleRepoClientSecret: string, redirectUrl: string) {
-        const da = new DataAccess({databasePath: dbPath, scheduleRepo: {
-            clientId: scheduleRepoClientId,
-            clientSecret: scheduleRepoClientSecret,
-            redirectUrls: [redirectUrl]
-        }});
+    constructor(config: AppConfig) {
+        const da = new DataAccess(config);
         this.messageProcessor = new MessageProcessor();
         this.commandExecutor = new CommandExecutor(da);
-        this.registerClient(token);
+        this.registerClient(config.discord.token);
     }
 
     registerClient(token: string): void {

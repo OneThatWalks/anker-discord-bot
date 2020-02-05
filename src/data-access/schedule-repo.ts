@@ -1,4 +1,5 @@
-import { IScheduleRepo, Employee, ScheduleRepoConfiguration } from '../../typings';
+import { GoogleApisConfig } from './../../typings/index.d';
+import { IScheduleRepo, Employee } from '../../typings';
 import { google } from 'googleapis';
 
 class ScheduleRepo implements IScheduleRepo {
@@ -12,7 +13,7 @@ class ScheduleRepo implements IScheduleRepo {
     /**
      * Initializes the schedule repo
      */
-    constructor(private scheduleRepoConfiguration: ScheduleRepoConfiguration) {
+    constructor(private googleApisConfig: GoogleApisConfig) {
         this.authorize();
     }
 
@@ -48,9 +49,9 @@ class ScheduleRepo implements IScheduleRepo {
     private getClient() {
         if (!this.oAuth2Client) {
             this.oAuth2Client = new google.auth.OAuth2(
-                this.scheduleRepoConfiguration.clientId,
-                this.scheduleRepoConfiguration.clientSecret,
-                this.scheduleRepoConfiguration.redirectUrls[0]
+                this.googleApisConfig.clientId,
+                this.googleApisConfig.clientSecret,
+                this.googleApisConfig.redirectUrls[0]
             );
 
             this.oAuth2Client.on('tokens', (tokens: any) => {

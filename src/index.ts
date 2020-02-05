@@ -1,22 +1,44 @@
+import { DatabaseUtil } from './data-access/db-util';
 import Bot from "./bot";
+import { readFileSync } from 'fs';
+import { AppConfig } from "../typings";
+import path = require('path');
 
 const args = process.argv.slice(2)
-let token: string;
-let databasePath: string;
+let configPath: string;
 
-var tokenArgIndex = args.findIndex(arg => arg.toLowerCase() === '-token');
-var databasePathArgIndex = args.findIndex(arg => arg.toLowerCase() === '-databasepath');
+const configFileArgIndex = args.findIndex(arg => arg.toLowerCase() === '-configfile');
 
-if (tokenArgIndex > -1) {
-    token = args[tokenArgIndex + 1];
+if (configFileArgIndex > -1) {
+    configPath = args[configFileArgIndex + 1];
 }
 
-if (databasePathArgIndex > -1) {
-    databasePath = args[databasePathArgIndex + 1];
-}
-
-if (!token || !databasePath) {
+if (!configPath) {
     process.exit(1);
 }
 
-const bot = new Bot(token, databasePath);
+const data = readFileSync(configPath, { encoding: 'UTF-8' });
+
+const config: AppConfig = JSON.parse(data);
+const sqlScript = readFileSync(path.join(__dirname, config.sqlite.schemaPath), { encoding: 'UTF-8' });
+
+// async IIFE because life is hard
+// Any unhandled exception will abort
+(async () => {
+try {
+    await DatabaseUtil.executeDb(config.sqlite.databasePath, async (db) => {
+        db.exec(sqlScript, (err: Error) => {
+            if (err) {
+                throw err;
+            }
+        })
+    });
+
+    const bot = new Bot(config);
+} catch (err) {
+    throw err;
+}
+})().catch((err) => {
+    console.log(err);
+    process.exit(1);
+});

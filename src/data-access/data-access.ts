@@ -1,4 +1,5 @@
-import { IDataAccess, DataAccessConfiguration, Employee } from '../../typings';
+import { AppConfig } from './../../typings/index.d';
+import { IDataAccess, Employee } from '../../typings';
 import EmployeeRepo from './employee-repo';
 import ScheduleRepo from './schedule-repo';
 
@@ -11,11 +12,11 @@ class DataAccess implements IDataAccess {
     /**
      * Creates an instance of the data access
      * 
-     * @param dataAccessConfiguration {DataAccessConfiguration} Instance of the data access config object
+     * @param config {AppConfig} Instance of the config object
      */
-    constructor(private dataAccessConfiguration: DataAccessConfiguration) {
-        this.employeeRepo = new EmployeeRepo(dataAccessConfiguration.databasePath);
-        this.scheduleRepo = new ScheduleRepo(dataAccessConfiguration.scheduleRepo);
+    constructor(private config: AppConfig) {
+        this.employeeRepo = new EmployeeRepo(config.sqlite.databasePath);
+        this.scheduleRepo = new ScheduleRepo(config.googleapis);
     }
 
     addEmployee(employee: Employee): Promise<void> {

@@ -15,7 +15,7 @@ class EmployeeRepo implements IEmployeeRepo {
 
     async addEmployee(employee: Employee): Promise<void> {
         return new Promise((res, rej) => {
-            DatabaseUtil.executeDb(this.database, (db: Database) => {
+            DatabaseUtil.executeDb(this.database, async (db: Database) => {
                 const sql = `INSERT INTO Employee (DiscordId, Name) VALUES(?, ?)`;
     
                 db.run(sql, [employee.DiscordId, employee.Name], (err: Error) => {
@@ -32,7 +32,7 @@ class EmployeeRepo implements IEmployeeRepo {
 
     async removeEmployee(discordId: string): Promise<void> {
         return new Promise((res, rej) => {
-            DatabaseUtil.executeDb(this.database, (db: Database) => {
+            DatabaseUtil.executeDb(this.database, async (db: Database) => {
                 const sql = `DELETE FROM Employee WHERE DiscordId = ?`;
     
                 db.run(sql, [discordId], (err: Error) => {
@@ -51,7 +51,7 @@ class EmployeeRepo implements IEmployeeRepo {
         return new Promise((res, rej) => {
             let em: Employee;
 
-            DatabaseUtil.executeDb(this.database, (db: Database) => {
+            DatabaseUtil.executeDb(this.database, async (db: Database) => {
                 const sql = `SELECT * FROM Employee WHERE DiscordId = ?`;
     
                 db.get(sql, [discordId], (err: Error, row: any) => {

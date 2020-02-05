@@ -72,19 +72,25 @@ export class Employee {
     Name: string;
 }
 
-/**
- * Describes the data access configuration
- */
-export class DataAccessConfiguration {
-    databasePath: string;
-
-    scheduleRepo: ScheduleRepoConfiguration;
+export class AppConfig {
+    discord: DiscordConfig;
+    googleapis: GoogleApisConfig
+    sqlite: SqliteConfig;
 }
 
-export class ScheduleRepoConfiguration {
+export class DiscordConfig {
+    token: string;
+}
+
+export class GoogleApisConfig {
     clientId: string;
     clientSecret: string;
     redirectUrls: string[]
+}
+
+export class SqliteConfig {
+    databasePath: string;
+    schemaPath: string;
 }
 
 // ENUM
