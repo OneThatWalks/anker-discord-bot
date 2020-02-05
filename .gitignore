@@ -109,3 +109,4 @@ dist
 # Configs
 config.json
 *.db
+tokens.json
