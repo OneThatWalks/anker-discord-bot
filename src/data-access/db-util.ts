@@ -22,26 +22,35 @@ export class DatabaseUtil {
     }
 
     /**
-     * Executes commands in the database context
+     * Executes non query results
+     * @param database Database
+     * @param callback Callback
+     */
+    public static async executeNonQueryDb(database: string, callback: (db: Database) => Promise<void>): Promise<void> {
+        return this.executeResultsAsync<void>(database, callback);
+    }
+
+    /**
+     * Executes query results
      * 
      * @param database The expected database file location
      * @param callback The db callback for commands
      */
-    public static async executeDb(database: string, callback: (db: Database) => Promise<void>): Promise<void> {
+    public static async executeResultsAsync<T>(database: string, callback: (db: Database) => Promise<T>): Promise<T> {
         return new Promise(async (res, rej) => {
+            let result: T;
             let db: Database;
             try {
                 db = await DatabaseUtil.getDbConnection(database);
 
                 console.log('Connected to the database');
 
-                await callback(db);
+                result = await callback(db);
 
                 await DatabaseUtil.closeDb(db);
-                res();
+                res(result);
             } catch (err) {
                 rej(err);
-                return;
             }
         });
     }

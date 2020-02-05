@@ -25,19 +25,21 @@ const sqlScript = readFileSync(path.join(__dirname, config.sqlite.schemaPath), {
 // async IIFE because life is hard
 // Any unhandled exception will abort
 (async () => {
-try {
-    await DatabaseUtil.executeDb(config.sqlite.databasePath, async (db) => {
-        db.exec(sqlScript, (err: Error) => {
-            if (err) {
-                throw err;
-            }
-        })
-    });
+    try {
+        await DatabaseUtil.executeResultsAsync(config.sqlite.databasePath, async (db) => new Promise((res, rej) => {
+            db.exec(sqlScript, (err: Error) => {
+                if (err) {
+                    rej(err);
+                }
+                console.log('Database schema applied');
+                res();
+            });
+        }));
 
-    const bot = new Bot(config);
-} catch (err) {
-    throw err;
-}
+        const bot = new Bot(config);
+    } catch (err) {
+        throw err;
+    }
 })().catch((err) => {
     console.log(err);
     process.exit(1);
