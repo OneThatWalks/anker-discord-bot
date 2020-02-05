@@ -1,12 +1,14 @@
-import { GoogleApisConfig } from './../../typings/index.d';
+import { GoogleApisConfig, Schedule } from './../../typings/index.d';
 import { IScheduleRepo, Employee } from '../../typings';
 import { google } from 'googleapis';
+import { readFile, writeFile } from 'fs';
 
 class ScheduleRepo implements IScheduleRepo {
 
+    // TODO:: Move google api "client" out of this class or rename and keep ctor
 
     private scope: string = 'https://www.googleapis.com/auth/calendar';
-    private tokenPath: string = 'token.json';
+    private tokenPath: string = './tokens.json';
     private oAuth2Client: any;
     private refresh_token: any;
 
@@ -17,19 +19,47 @@ class ScheduleRepo implements IScheduleRepo {
         this.authorize();
     }
 
-    getSchedule(employee: Employee) {
-        const calendar = google.calendar({version: 'v3', auth: this.getClient()});
+    async getSchedule(employee: Employee): Promise<Schedule> {
+        const calendar = google.calendar({ version: 'v3', auth: this.getClient() });
 
-        calendar.calendarList.list().then((val: any) => console.log(val));
+        const startDate = new Date();
+        const endDate = new Date();
+        endDate.setDate(endDate.getDate() + 7);
 
-        // TODO: implement event searching for set calendar
+        try {
+            const results = await calendar.events.list({
+                calendarId: this.googleApisConfig.calendar.calendarId,
+                timeMin: startDate.toISOString(),
+                timeMax: endDate.toISOString()
+            });
+
+            console.log(results);
+
+            // TODO: Do work
+        } catch (err) {
+            throw err;
+        }
+
         // REMARKS: Calendar id can be found in calendar sharing settings
+        return null;
     }
 
-    authorize(): void;
-    authorize(code: string): void;
-    authorize(code?: string) {
+    authorize(): Promise<void>;
+    authorize(code: string): Promise<void>;
+    async authorize(code?: string): Promise<void> {
         const oAuth2Client = this.getClient();
+
+        try {
+            const tokens = await this.checkForTokens();
+            if (tokens) {
+                oAuth2Client.setCredentials(tokens);
+                console.log('Authenticated');
+                return;
+            }
+        } catch (err) {
+            console.log('There was an issue getting tokens from file');
+        }
+
 
         if (!code) {
             const authUrl = oAuth2Client.generateAuthUrl({
@@ -40,9 +70,43 @@ class ScheduleRepo implements IScheduleRepo {
             return;
         }
 
-        oAuth2Client.getToken(code).then((value: any) => {
+        oAuth2Client.getToken(code).then(async (value: any) => {
             const { tokens } = value;
             oAuth2Client.setCredentials(tokens);
+            await this.saveTokens(tokens);
+            console.log('Authenticated');
+        });
+    }
+
+    private saveTokens(tokens: any) {
+        return new Promise((res, rej) => {
+            writeFile(this.tokenPath, JSON.stringify(tokens), { encoding: 'UTF-8' }, (err) => {
+                if (err) {
+                    rej(err);
+                    return;
+                }
+                console.log('Tokens saved');
+                res();
+            });
+        });
+    }
+
+    private checkForTokens(): Promise<any> {
+        return new Promise((res, rej) => {
+            readFile(this.tokenPath, { encoding: 'UTF-8' }, (err, data) => {
+                if (err) {
+                    rej(err);
+                    return;
+                }
+
+                try {
+                    const tokens = JSON.parse(data);
+                    console.log('Tokens retrieved');
+                    res(tokens);
+                } catch (err) {
+                    rej(err);
+                }
+            });
         });
     }
 
@@ -57,14 +121,14 @@ class ScheduleRepo implements IScheduleRepo {
             this.oAuth2Client.on('tokens', (tokens: any) => {
                 if (tokens.refresh_token) {
                     this.refresh_token = tokens.refresh_token;
-                    this.oAuth2Client.setCredentials({refresh_token: this.refresh_token})
+                    this.oAuth2Client.setCredentials({ refresh_token: this.refresh_token })
                     console.log(tokens.refresh_token);
                 }
 
                 console.log(tokens.access_token);
             });
         }
-        
+
         return this.oAuth2Client;
     }
 

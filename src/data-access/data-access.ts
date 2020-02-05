@@ -1,4 +1,4 @@
-import { AppConfig } from './../../typings/index.d';
+import { AppConfig, Schedule } from './../../typings/index.d';
 import { IDataAccess, Employee } from '../../typings';
 import EmployeeRepo from './employee-repo';
 import ScheduleRepo from './schedule-repo';
@@ -39,13 +39,13 @@ class DataAccess implements IDataAccess {
         throw new Error("Method not implemented.");
     }
 
-    getSchedule(employee: Employee): any {
+    getSchedule(employee: Employee): Promise<Schedule> {
         return this.scheduleRepo.getSchedule(employee);
     }
 
-    authorize(): void;
-    authorize(code: string): void;
-    authorize(code?: string) {
+    authorize(): Promise<void>;
+    authorize(code: string): Promise<void>;
+    authorize(code?: string): Promise<void> {
         if (!code) {
             return this.scheduleRepo.authorize();
         }

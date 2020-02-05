@@ -38,11 +38,11 @@ export interface ITimeClockRepo {
 }
 
 export interface IScheduleRepo {
-    getSchedule(employee: Employee): any
+    getSchedule(employee: Employee): Promise<Schedule>
 
     // Potential interface
-    authorize(): void;
-    authorize(code: string): void;
+    authorize(): Promise<void>;
+    authorize(code: string): Promise<void>;
 }
 
 export interface IMessageProcessor {
@@ -52,6 +52,10 @@ export interface IMessageProcessor {
 //
 // Classes
 //
+
+export class Schedule {
+
+}
 
 /**
  * Describes the command execution context
@@ -86,6 +90,11 @@ export class GoogleApisConfig {
     clientId: string;
     clientSecret: string;
     redirectUrls: string[]
+    calendar: CalendarConfig;
+}
+
+export class CalendarConfig {
+    calendarId: string;
 }
 
 export class SqliteConfig {
