@@ -13,15 +13,16 @@ class EmployeeRepo implements IEmployeeRepo {
 
     }
 
-    async addEmployee(employee: Employee): Promise<void> {
-        return new Promise((res, rej) => {
-            DatabaseUtil.executeDb(this.database, async (db: Database) => {
+    addEmployee(employee: Employee): Promise<void> {
+        return new Promise(async (res, rej) => {
+            await DatabaseUtil.executeDb(this.database, async (db: Database) => {
                 const sql = `INSERT INTO Employee (DiscordId, Name) VALUES(?, ?)`;
     
                 db.run(sql, [employee.DiscordId, employee.Name], (err: Error) => {
                     if (err) {
                         console.log(err.message);
                         rej(err);
+                        return;
                     }
                     console.log('Employee(s) inserted');
                     res();
@@ -30,15 +31,16 @@ class EmployeeRepo implements IEmployeeRepo {
         });
     }
 
-    async removeEmployee(discordId: string): Promise<void> {
-        return new Promise((res, rej) => {
-            DatabaseUtil.executeDb(this.database, async (db: Database) => {
+    removeEmployee(discordId: string): Promise<void> {
+        return new Promise(async (res, rej) => {
+            await DatabaseUtil.executeDb(this.database, async (db: Database) => {
                 const sql = `DELETE FROM Employee WHERE DiscordId = ?`;
     
                 db.run(sql, [discordId], (err: Error) => {
                     if (err) {
                         console.log(err.message);
                         rej(err);
+                        return;
                     }
                     console.log('Employee(s) deleted');
                     res();
@@ -47,21 +49,23 @@ class EmployeeRepo implements IEmployeeRepo {
         });
     }
 
-    async getEmployee(discordId: string): Promise<Employee> {
-        return new Promise((res, rej) => {
+    getEmployee(discordId: string): Promise<Employee> {
+        return new Promise(async (res, rej) => {
             let em: Employee;
 
-            DatabaseUtil.executeDb(this.database, async (db: Database) => {
+            await DatabaseUtil.executeDb(this.database, async (db: Database) => {
                 const sql = `SELECT * FROM Employee WHERE DiscordId = ?`;
     
                 db.get(sql, [discordId], (err: Error, row: any) => {
                     if (err) {
                         console.log(err.message);
                         rej(err);
+                        return;
                     }
     
                     if (!row) {
                         res(null);
+                        return;
                     }
     
                     console.log('Employee retrieved');
