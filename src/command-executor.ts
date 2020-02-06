@@ -1,20 +1,21 @@
 import { ICommandExecutor, IDataAccess, CommandExecutorContext, MessageActionTypes } from '../typings';
+import { injectable, inject } from 'tsyringe';
 
-
+@injectable()
 class CommandExecutor implements ICommandExecutor {
     /**
      * Creates a command executor
      * 
      * @param dataAccess {IDataAccess} The data access service
      */
-    constructor(private dataAccess: IDataAccess) {
+    constructor(@inject("IDataAccess") private dataAccess: IDataAccess) {
 
     }
 
     execute(context: CommandExecutorContext): CommandExecutorContext {
 
         switch (context.action) {
-            case MessageActionTypes.SCHEDULE:
+            case MessageActionTypes.SCHEDULE: {
                 // get schedule
                 this.dataAccess.getEmployee(context.clientMessage.author.id).then(async (em) => {
                     if (em == null) {
@@ -30,20 +31,25 @@ class CommandExecutor implements ICommandExecutor {
                     throw err;
                 });
                 break;
+            }
             case MessageActionTypes.AUTH_CODE:
-                const words = context.clientMessage.content.split(' ');
-                const authCodeWordIndex = words.findIndex(w => w.toLowerCase() === '!authcode');
+                {
+                    const words = context.clientMessage.content.split(' ');
+                    const authCodeWordIndex = words.findIndex(w => w.toLowerCase() === '!authcode');
 
-                if (authCodeWordIndex === -1) {
-                    throw new Error('Unexpected action error.  Auth code action detected but no command exists in message.');
+                    if (authCodeWordIndex === -1) {
+                        throw new Error('Unexpected action error.  Auth code action detected but no command exists in message.');
+                    }
+
+                    const code = words[authCodeWordIndex + 1];
+
+                    this.dataAccess.authorize(code);
+                    break;
                 }
-
-                const code = words[authCodeWordIndex + 1];
-
-                this.dataAccess.authorize(code);
-                break;
             default:
-                break;
+                {
+                    break;
+                }
         }
 
         return context;

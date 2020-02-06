@@ -1,22 +1,19 @@
-import { AppConfig, Schedule } from './../../typings/index.d';
+import { Schedule, IEmployeeRepo, IScheduleRepo } from './../../typings/index.d';
 import { IDataAccess, Employee } from '../../typings';
-import EmployeeRepo from './employee-repo';
-import ScheduleRepo from './schedule-repo';
+import { injectable, inject } from 'tsyringe';
+import { AppConfig } from '../models/app-config';
 
+@injectable()
 class DataAccess implements IDataAccess {
-    
-    
-    private employeeRepo: EmployeeRepo;
-    private scheduleRepo: ScheduleRepo;
 
     /**
      * Creates an instance of the data access
      * 
      * @param config {AppConfig} Instance of the config object
      */
-    constructor(private config: AppConfig) {
-        this.employeeRepo = new EmployeeRepo(config.sqlite.databasePath);
-        this.scheduleRepo = new ScheduleRepo(config.googleapis);
+    constructor(@inject(AppConfig) private config: AppConfig,
+                @inject("IEmployeeRepo") private employeeRepo: IEmployeeRepo,
+                @inject("IScheduleRepo") private scheduleRepo: IScheduleRepo) {
     }
 
     addEmployee(employee: Employee): Promise<void> {

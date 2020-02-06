@@ -9,7 +9,7 @@ export class DatabaseUtil {
      * 
      * @param database The expected database file location
      */
-    public static async getDbConnection(database: string): Promise<Database> {
+    public static getDbConnection(database: string): Promise<Database> {
         return new Promise<Database>((res, rej) => {
             const db: Database = new Database(database, OPEN_READWRITE | OPEN_CREATE, (err: Error) => {
                 if (err) {
@@ -26,7 +26,7 @@ export class DatabaseUtil {
      * @param database Database
      * @param callback Callback
      */
-    public static async executeNonQueryDb(database: string, callback: (db: Database) => Promise<void>): Promise<void> {
+    public static executeNonQueryDb(database: string, callback: (db: Database) => Promise<void>): Promise<void> {
         return this.executeResultsAsync<void>(database, callback);
     }
 
@@ -37,22 +37,19 @@ export class DatabaseUtil {
      * @param callback The db callback for commands
      */
     public static async executeResultsAsync<T>(database: string, callback: (db: Database) => Promise<T>): Promise<T> {
-        return new Promise(async (res, rej) => {
             let result: T;
             let db: Database;
             try {
                 db = await DatabaseUtil.getDbConnection(database);
 
-                console.log('Connected to the database');
-
                 result = await callback(db);
 
                 await DatabaseUtil.closeDb(db);
-                res(result);
+                return result;
             } catch (err) {
-                rej(err);
+                console.error(err);
+                throw err;
             }
-        });
     }
 
     /**

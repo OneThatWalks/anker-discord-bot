@@ -1,23 +1,25 @@
 import { Employee, IEmployeeRepo } from '../../typings';
 import { Database } from 'sqlite3';
 import DatabaseUtil from './db-util';
+import { injectable, inject } from 'tsyringe';
+import { AppConfig } from '../models/app-config';
 
+@injectable()
 class EmployeeRepo implements IEmployeeRepo {
+    private database: string;
 
     /**
      * Initializes employee repo with database path
      * 
      * @param database The expected file location of the database
      */
-    constructor(private database: string) {
-
+    constructor(@inject(AppConfig) private appConfig: AppConfig) {
+        this.database = appConfig.sqlite.databasePath;
     }
 
-    addEmployee(employee: Employee): Promise<void> {
-        return new Promise(async (res, rej) => {
-            await DatabaseUtil.executeResultsAsync(this.database, async (db: Database) => {
-                return this._addEmployee(employee, db);
-            });
+    public addEmployee(employee: Employee): Promise<void> {
+        return DatabaseUtil.executeResultsAsync(this.database, async (db: Database) => {
+            return this._addEmployee(employee, db);
         });
     }
 
@@ -36,11 +38,9 @@ class EmployeeRepo implements IEmployeeRepo {
         });
     }
 
-    removeEmployee(discordId: string): Promise<void> {
-        return new Promise(async (res, rej) => {
-            return DatabaseUtil.executeResultsAsync(this.database, async (db: Database) => {
-                return this._removeEmployee(discordId, db);
-            });
+    public removeEmployee(discordId: string): Promise<void> {
+        return DatabaseUtil.executeResultsAsync(this.database, async (db: Database) => {
+            return this._removeEmployee(discordId, db);
         });
     }
 
@@ -65,7 +65,7 @@ class EmployeeRepo implements IEmployeeRepo {
         });
     }
 
-    getEmployee(discordId: string): Promise<Employee> {
+    public getEmployee(discordId: string): Promise<Employee> {
         return DatabaseUtil.executeResultsAsync<Employee>(this.database, async (db: Database) => {
             return this._getEmployee(discordId, db);
         });
@@ -78,10 +78,9 @@ class EmployeeRepo implements IEmployeeRepo {
      */
     private _getEmployee(discordId: string, db: Database): Promise<Employee> {
         return new Promise((resolve, reject) => {
-            let em: Employee;
             const sql = `SELECT * FROM Employee WHERE DiscordId = ?`;
 
-            db.get(sql, [discordId], (err: Error, row: any) => {
+            db.get(sql, [discordId], (err: Error, row: Employee) => {
                 if (err) {
                     reject(err);
                     return;
@@ -93,16 +92,8 @@ class EmployeeRepo implements IEmployeeRepo {
                     return;
                 }
 
-                console.log('Employee retrieved');
-
-                // Read row
-                em = {
-                    DiscordId: row.DiscordId,
-                    Name: row.Name
-                };
-
                 // Resolve promise
-                resolve(em);
+                resolve(row);
             });
         });
     }

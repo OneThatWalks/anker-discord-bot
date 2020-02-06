@@ -10,7 +10,7 @@ class MessageProcessor implements IMessageProcessor {
         }
 
         // Match on !abc123
-        var matches = message.match(/(![a-z0-9]\w*)/ig);
+        const matches = message.match(/(![a-z0-9]\w*)/ig);
         console.log(matches);
 
         // Returning only one action per message right now

@@ -1,20 +1,16 @@
-import { AppConfig } from './../typings/index.d';
 import { Client, Message } from 'discord.js';
-import DataAccess from './data-access/data-access';
 import { IMessageProcessor, ICommandExecutor, CommandExecutorContext } from '../typings';
-import MessageProcessor from './message-processor';
-import CommandExecutor from './command-executor';
+import { inject, injectable } from 'tsyringe';
+import { AppConfig } from './models/app-config';
 
+@injectable()
 class Bot {
 
     public client: Client;
-    private messageProcessor: IMessageProcessor;
-    commandExecutor: ICommandExecutor;
 
-    constructor(config: AppConfig) {
-        const da = new DataAccess(config);
-        this.messageProcessor = new MessageProcessor();
-        this.commandExecutor = new CommandExecutor(da);
+    constructor(@inject(AppConfig) private config: AppConfig,
+        @inject("IMessageProcessor") private messageProcessor: IMessageProcessor,
+        @inject("ICommandExecutor") private commandExecutor: ICommandExecutor) {
         this.registerClient(config.discord.token);
     }
 
@@ -34,7 +30,7 @@ class Bot {
                 const action = this.messageProcessor.process(message.content);
                 console.log(action);
 
-                var commandContext: CommandExecutorContext = {
+                const commandContext: CommandExecutorContext = {
                     action: action,
                     clientMessage: message,
                     response: null

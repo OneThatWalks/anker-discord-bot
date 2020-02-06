@@ -1,21 +1,28 @@
-import { GoogleApisConfig, Schedule } from './../../typings/index.d';
+import { Schedule } from './../../typings/index.d';
 import { IScheduleRepo, Employee } from '../../typings';
 import { google } from 'googleapis';
 import { readFile, writeFile } from 'fs';
+import {injectable, inject} from "tsyringe";
+import { OAuth2Client, Credentials } from 'google-auth-library';
+import { GetTokenResponse } from 'google-auth-library/build/src/auth/oauth2client'
+import { GoogleApisConfig, AppConfig } from '../models/app-config';
 
+@injectable()
 class ScheduleRepo implements IScheduleRepo {
 
     // TODO:: Move google api "client" out of this class or rename and keep ctor
 
-    private scope: string = 'https://www.googleapis.com/auth/calendar';
-    private tokenPath: string = './tokens.json';
-    private oAuth2Client: any;
-    private refresh_token: any;
+    private googleApisConfig: GoogleApisConfig;
+    private scope = 'https://www.googleapis.com/auth/calendar';
+    private tokenPath = './tokens.json';
+    private oAuth2Client: OAuth2Client;
+    private refreshToken: string;
 
     /**
      * Initializes the schedule repo
      */
-    constructor(private googleApisConfig: GoogleApisConfig) {
+    constructor(@inject(AppConfig) private appConfig: AppConfig) {
+        this.googleApisConfig = appConfig.googleapis;
         this.authorize();
     }
 
@@ -37,6 +44,7 @@ class ScheduleRepo implements IScheduleRepo {
 
             // TODO: Do work
         } catch (err) {
+            console.error(err);
             throw err;
         }
 
@@ -63,6 +71,7 @@ class ScheduleRepo implements IScheduleRepo {
 
         if (!code) {
             const authUrl = oAuth2Client.generateAuthUrl({
+                // eslint-disable-next-line @typescript-eslint/camelcase
                 access_type: 'offline',
                 scope: this.scope
             });
@@ -70,7 +79,7 @@ class ScheduleRepo implements IScheduleRepo {
             return;
         }
 
-        oAuth2Client.getToken(code).then(async (value: any) => {
+        oAuth2Client.getToken(code).then(async (value: GetTokenResponse) => {
             const { tokens } = value;
             oAuth2Client.setCredentials(tokens);
             await this.saveTokens(tokens);
@@ -78,7 +87,7 @@ class ScheduleRepo implements IScheduleRepo {
         });
     }
 
-    private saveTokens(tokens: any) {
+    private saveTokens(tokens: Credentials): Promise<void> {
         return new Promise((res, rej) => {
             writeFile(this.tokenPath, JSON.stringify(tokens), { encoding: 'UTF-8' }, (err) => {
                 if (err) {
@@ -91,7 +100,7 @@ class ScheduleRepo implements IScheduleRepo {
         });
     }
 
-    private checkForTokens(): Promise<any> {
+    private checkForTokens(): Promise<Credentials> {
         return new Promise((res, rej) => {
             readFile(this.tokenPath, { encoding: 'UTF-8' }, (err, data) => {
                 if (err) {
@@ -100,7 +109,7 @@ class ScheduleRepo implements IScheduleRepo {
                 }
 
                 try {
-                    const tokens = JSON.parse(data);
+                    const tokens: Credentials = JSON.parse(data);
                     console.log('Tokens retrieved');
                     res(tokens);
                 } catch (err) {
@@ -110,7 +119,7 @@ class ScheduleRepo implements IScheduleRepo {
         });
     }
 
-    private getClient() {
+    private getClient(): OAuth2Client {
         if (!this.oAuth2Client) {
             this.oAuth2Client = new google.auth.OAuth2(
                 this.googleApisConfig.clientId,
@@ -118,10 +127,11 @@ class ScheduleRepo implements IScheduleRepo {
                 this.googleApisConfig.redirectUrls[0]
             );
 
-            this.oAuth2Client.on('tokens', (tokens: any) => {
+            this.oAuth2Client.on('tokens', (tokens: Credentials) => {
                 if (tokens.refresh_token) {
-                    this.refresh_token = tokens.refresh_token;
-                    this.oAuth2Client.setCredentials({ refresh_token: this.refresh_token })
+                    this.refreshToken = tokens.refresh_token;
+                    // eslint-disable-next-line @typescript-eslint/camelcase
+                    this.oAuth2Client.setCredentials({ refresh_token: this.refreshToken })
                     console.log(tokens.refresh_token);
                 }
 

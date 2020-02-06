@@ -1,4 +1,5 @@
 import { Message } from "discord.js";
+import { injectable } from "tsyringe";
 
 // Type definitions for [anker-discord-bot] [1.0.0]
 // Project: [anker-discord-bot]
@@ -18,12 +19,10 @@ export interface ICommandExecutor {
 /**
  * The bot interface
  */
-export interface IBot {
-    
-}
+//export interface Bot {}
 
 export interface IDataAccess extends IEmployeeRepo, ITimeClockRepo, IScheduleRepo {
-    
+
 }
 
 export interface IEmployeeRepo {
@@ -38,7 +37,7 @@ export interface ITimeClockRepo {
 }
 
 export interface IScheduleRepo {
-    getSchedule(employee: Employee): Promise<Schedule>
+    getSchedule(employee: Employee): Promise<Schedule>;
 
     // Potential interface
     authorize(): Promise<void>;
@@ -74,32 +73,6 @@ export class CommandExecutorContext {
 export class Employee {
     DiscordId: string;
     Name: string;
-}
-
-export class AppConfig {
-    discord: DiscordConfig;
-    googleapis: GoogleApisConfig
-    sqlite: SqliteConfig;
-}
-
-export class DiscordConfig {
-    token: string;
-}
-
-export class GoogleApisConfig {
-    clientId: string;
-    clientSecret: string;
-    redirectUrls: string[]
-    calendar: CalendarConfig;
-}
-
-export class CalendarConfig {
-    calendarId: string;
-}
-
-export class SqliteConfig {
-    databasePath: string;
-    schemaPath: string;
 }
 
 // ENUM
