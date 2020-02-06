@@ -1,4 +1,4 @@
-import { IMessageProcessor, MessageActionTypes } from '../typings';
+import { IMessageProcessor, MessageActionTypes } from './typings';
 
 class MessageProcessor implements IMessageProcessor {
 

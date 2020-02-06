@@ -1,5 +1,5 @@
 import { Client, Message } from 'discord.js';
-import { IMessageProcessor, ICommandExecutor, CommandExecutorContext } from '../typings';
+import { IMessageProcessor, ICommandExecutor, CommandExecutorContext } from './typings';
 import { inject, injectable } from 'tsyringe';
 import { AppConfig } from './models/app-config';
 

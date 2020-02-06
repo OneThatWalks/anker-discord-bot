@@ -1,5 +1,5 @@
-import { Schedule, IEmployeeRepo, IScheduleRepo } from './../../typings/index.d';
-import { IDataAccess, Employee } from '../../typings';
+import { Schedule, IEmployeeRepo, IScheduleRepo } from '../typings';
+import { IDataAccess, Employee } from '../typings';
 import { injectable, inject } from 'tsyringe';
 import { AppConfig } from '../models/app-config';
 
