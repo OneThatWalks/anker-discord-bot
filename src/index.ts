@@ -7,9 +7,9 @@ import { container } from "tsyringe";
 import ScheduleRepo from "./data-access/schedule-repo";
 import EmployeeRepo from "./data-access/employee-repo";
 import DataAccess from "./data-access/data-access";
-import MessageProcessor from "./message-processor";
 import CommandExecutor from "./command-executor";
 import { AppConfig } from "./models/app-config";
+import RequestProcessorImpl from "./request-processor";
 
 const args = process.argv.slice(2)
 let configPath: string;
@@ -40,8 +40,8 @@ container.register('IEmployeeRepo', {
 container.register('IDataAccess', {
     useClass: DataAccess
 });
-container.register('IMessageProcessor', {
-    useClass: MessageProcessor
+container.register('RequestProcessor', {
+    useClass: RequestProcessorImpl
 });
 container.register('ICommandExecutor', {
     useClass: CommandExecutor

@@ -1,5 +1,4 @@
 import { Message } from "discord.js";
-import { injectable } from "tsyringe";
 
 // Type definitions for [anker-discord-bot] [1.0.0]
 // Project: [anker-discord-bot]
@@ -44,8 +43,25 @@ export interface IScheduleRepo {
     authorize(code: string): Promise<void>;
 }
 
-export interface IMessageProcessor {
-    process(message: string): MessageActionTypes;
+export interface RequestProcessor {
+    getRequest(message: Message): DiscordRequest;
+}
+
+export interface DiscordCommand {
+    execute(): Promise<void>;
+}
+
+export interface DiscordInvoker {
+    authorize(): Promise<void>;
+    schedule(): Promise<void>;
+    clockIn(): Promise<void>;
+    clockOut(): Promise<void>;
+}
+
+export interface DiscordRequest {
+    action: MessageActionTypes;
+    message: Message;
+    args: string[];
 }
 
 //

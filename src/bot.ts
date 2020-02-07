@@ -1,7 +1,10 @@
 import { Client, Message } from 'discord.js';
-import { IMessageProcessor, ICommandExecutor, CommandExecutorContext } from './typings';
+import { DiscordCommand, DiscordRequest, DiscordInvoker, MessageActionTypes, IScheduleRepo } from './typings';
 import { inject, injectable } from 'tsyringe';
 import { AppConfig } from './models/app-config';
+import AuthorizeCommand from './models/discord-commands/authorize-command';
+import DiscordCommander from './discord-commander';
+import RequestProcessorImpl from './request-processor';
 
 @injectable()
 class Bot {
@@ -9,8 +12,8 @@ class Bot {
     public client: Client;
 
     constructor(@inject(AppConfig) private config: AppConfig,
-        @inject("IMessageProcessor") private messageProcessor: IMessageProcessor,
-        @inject("ICommandExecutor") private commandExecutor: ICommandExecutor) {
+        @inject("RequestProcessor") private requestProcessor: RequestProcessorImpl,
+        @inject("IScheduleRepo") private scheduleRepo: IScheduleRepo) {
         this.registerClient(config.discord.token);
     }
 
@@ -23,24 +26,25 @@ class Bot {
 
         this.client.login(token);
 
-        this.client.on('message', (message: Message) => {
+        this.client.on('message', async (message: Message) => {
             if (message.author !== this.client.user) {
                 console.log(`Processing message from ${message.author.username} Content: ${message.content}`);
 
-                const action = this.messageProcessor.process(message.content);
-                console.log(action);
+                // Get the request for this message
+                // Contains the message itself, the action and the args
+                const request: DiscordRequest = this.requestProcessor.getRequest(message);
 
-                const commandContext: CommandExecutorContext = {
-                    action: action,
-                    clientMessage: message,
-                    response: null
-                };
+                // Instantiate commands for this request
+                const authCommand: DiscordCommand = new AuthorizeCommand(request, /* Receiver*/ this.scheduleRepo);
 
-                this.commandExecutor.execute(commandContext);
-                console.log(commandContext);
+                // The invoker of the commands
+                // Doesn't need to know what each command does
+                const commander: DiscordInvoker = new DiscordCommander(authCommand);
 
-                if (commandContext.response) {
-                    message.channel.send(commandContext.response);
+                switch(request.action) {
+                    case MessageActionTypes.AUTH_CODE: {
+                        await commander.authorize();
+                    }
                 }
             }
         });
