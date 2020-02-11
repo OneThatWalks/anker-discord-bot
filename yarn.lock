@@ -1433,6 +1433,13 @@ mocha@^7.0.1:
     yargs-parser "13.1.1"
     yargs-unparser "1.6.0"
 
+moq.ts@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/moq.ts/-/moq.ts-3.0.0.tgz#c09336cbc3bf72acec728a0ec6d569cabe5d55c8"
+  integrity sha512-42MjOerHoc7wDeg7FYdQ6v2xCLHj/7QyOsI8ee9zrqRP5BzwxJT/JfUKF6Mn5k66MaN1QveHyZZpeyVIM5OQqw==
+  dependencies:
+    tslib "^1.9.0"
+
 ms@2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.1.tgz#30a5864eb3ebb0a66f2ebe6d727af06a09d86e0a"
