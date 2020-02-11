@@ -1,4 +1,5 @@
-import { Message } from "discord.js";
+import { Message, StringResolvable, MessageOptions, MessageAdditions } from "discord.js";
+import MessageWrapper from "../models/message-wrapper";
 
 // Type definitions for [anker-discord-bot] [1.0.0]
 // Project: [anker-discord-bot]
@@ -44,7 +45,7 @@ export interface IScheduleRepo {
 }
 
 export interface RequestProcessor {
-    getRequest(message: Message): DiscordRequest;
+    getRequest(message: MessageWrapper): DiscordRequest;
 }
 
 export interface DiscordCommand {
@@ -60,9 +61,12 @@ export interface DiscordInvoker {
 
 export interface DiscordRequest {
     action: MessageActionTypes;
-    message: Message;
+    message: MessageWrapper;
     args: string[];
+
+    dataAccess: IDataAccess;
 }
+
 
 //
 // Classes
@@ -96,5 +100,7 @@ export class Employee {
 export const enum MessageActionTypes {
     NONE = 0,
     SCHEDULE = 1,
-    AUTH_CODE = 2
+    AUTH_CODE = 2,
+    LOGIN = 3,
+    LOGOUT = 4
 }

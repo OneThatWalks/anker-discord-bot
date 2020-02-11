@@ -1,5 +1,5 @@
-import { MessageActionTypes, DiscordRequest } from "./typings";
-import { Message } from "discord.js";
+import { MessageActionTypes, DiscordRequest, IDataAccess } from "./typings";
+import MessageWrapper from "./models/message-wrapper";
 
 /**
  * Describes a discord request
@@ -14,6 +14,6 @@ export class DiscordRequestImpl implements DiscordRequest {
      * @param action {MessageActionTypes} The action to invoke
      * @param args {string[]} The arguments of the request
      */
-    constructor(public message: Message, public action: MessageActionTypes, public args: string[]) {
+    constructor(public message: MessageWrapper, public action: MessageActionTypes, public args: string[], public dataAccess: IDataAccess) {
     }
 }

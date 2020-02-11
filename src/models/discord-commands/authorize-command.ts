@@ -1,4 +1,4 @@
-import { DiscordCommand, DiscordRequest, IScheduleRepo } from "../../typings";
+import { DiscordCommand, DiscordRequest } from "../../typings";
 
 /**
  * The authorize command
@@ -7,12 +7,12 @@ class AuthorizeCommand implements DiscordCommand {
     /**
      *
      */
-    constructor(private request: DiscordRequest, private scheduleRepo: IScheduleRepo) {
+    constructor(private request: DiscordRequest) {
 
     }
 
     execute(): Promise<void> {
-        return this.scheduleRepo.authorize(this.request.args[0]);
+        return this.request.dataAccess.authorize(this.request.args[0]);
     }
 }
 

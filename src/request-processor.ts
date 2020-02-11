@@ -1,10 +1,21 @@
-import { RequestProcessor, DiscordRequest, MessageActionTypes } from "./typings";
-import { Message } from "discord.js";
+import { RequestProcessor, DiscordRequest, MessageActionTypes, IDataAccess } from "./typings";
 import { DiscordRequestImpl } from "./discord-request";
+import { inject, injectable } from "tsyringe";
+import MessageWrapper from "./models/message-wrapper";
 
+@injectable()
 class RequestProcessorImpl implements RequestProcessor {
 
-    public getRequest(message: Message): DiscordRequest {
+    /**
+     * Creates a request processor
+     * 
+     * @param dataAccess {IDataAccess} the data access service
+     */
+    constructor(@inject('IDataAccess') private dataAccess: IDataAccess) {
+                
+    }
+
+    public getRequest(message: MessageWrapper): DiscordRequest {
         if (!message.content.startsWith('!')) {
             console.debug('Ignoring non-bot message');
             return;
@@ -25,9 +36,15 @@ class RequestProcessorImpl implements RequestProcessor {
         switch (matches[0].substr(1).toLowerCase()) {
             case 'schedule':
             case 'view':
-                return new DiscordRequestImpl(message, MessageActionTypes.SCHEDULE, args);
+                return new DiscordRequestImpl(message, MessageActionTypes.SCHEDULE, args, this.dataAccess);
             case 'authcode': {
-                return new DiscordRequestImpl(message, MessageActionTypes.AUTH_CODE, args);
+                return new DiscordRequestImpl(message, MessageActionTypes.AUTH_CODE, args, this.dataAccess);
+            }
+            case 'login': {
+                return new DiscordRequestImpl(message, MessageActionTypes.LOGIN, args, this.dataAccess);
+            }
+            case 'logout': {
+                return new DiscordRequestImpl(message, MessageActionTypes.LOGOUT, args, this.dataAccess);
             }
             default:
                 return null;
