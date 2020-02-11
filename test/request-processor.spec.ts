@@ -15,10 +15,11 @@ describe('Request Processor', () => {
         // Create a child container for clean service and dependency mocking each time
         childContainer = container.createChildContainer();
 
+        // Create mock dependencies
         mockDataAccess = new Mock<IDataAccess>();
 
-        // Mock out the real implementation with a mock
-        childContainer.registerInstance('IDataAccess', mockDataAccess.object);
+        // Register mock dependencies to the container
+        childContainer.registerInstance('IDataAccess', mockDataAccess.object())
 
         // Retrieve an instance of MyClass with a mock dependency
         service = childContainer.resolve(RequestProcessorImpl);
