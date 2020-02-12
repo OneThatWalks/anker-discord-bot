@@ -1,4 +1,4 @@
-import { Employee, IEmployeeRepo } from '../typings';
+import { Employee, IEmployeeRepo } from '../types';
 import { Database } from 'sqlite3';
 import DatabaseUtil from './db-util';
 import { injectable, inject } from 'tsyringe';

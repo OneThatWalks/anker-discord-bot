@@ -1,4 +1,4 @@
-import { DiscordCommand, DiscordRequest } from "../../typings";
+import { DiscordCommand, DiscordRequest, Employee } from "../../types";
 
 class ScheduleCommand implements DiscordCommand {
     /**
@@ -10,7 +10,18 @@ class ScheduleCommand implements DiscordCommand {
     public async execute(): Promise<void> {
         const employee = await this.request.dataAccess.getEmployee(this.request.message.authorId);
 
-        const schedule = this.request.dataAccess.getSchedule(employee);
+        if (!employee) {
+            const employee: Employee = {
+                DiscordId: this.request.message.authorId,
+                Name: this.request.message.author
+            };
+
+            await this.request.dataAccess.addEmployee(employee);
+        }
+
+        const schedule = await this.request.dataAccess.getSchedule(employee);
+
+        this.request.message.replyCallback([...schedule.days]);
     }
 }
 

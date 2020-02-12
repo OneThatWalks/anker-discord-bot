@@ -1,4 +1,4 @@
-import { ICommandExecutor, IDataAccess, CommandExecutorContext, MessageActionTypes } from './typings';
+import { ICommandExecutor, IDataAccess, CommandExecutorContext, MessageActionTypes } from './types';
 import { injectable, inject } from 'tsyringe';
 
 @injectable()

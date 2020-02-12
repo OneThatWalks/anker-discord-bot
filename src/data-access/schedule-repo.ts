@@ -1,5 +1,5 @@
-import { Schedule } from '../typings';
-import { IScheduleRepo, Employee } from '../typings';
+import { Schedule } from '../types';
+import { IScheduleRepo, Employee } from '../types';
 import { google } from 'googleapis';
 import { readFile, writeFile } from 'fs';
 import {injectable, inject} from "tsyringe";

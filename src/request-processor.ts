@@ -1,4 +1,4 @@
-import { RequestProcessor, DiscordRequest, MessageActionTypes, IDataAccess } from "./typings";
+import { RequestProcessor, DiscordRequest, MessageActionTypes, IDataAccess } from "./types";
 import { DiscordRequestImpl } from "./discord-request";
 import { inject, injectable } from "tsyringe";
 import MessageWrapper from "./models/message-wrapper";

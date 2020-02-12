@@ -1,8 +1,11 @@
 import 'reflect-metadata';
-import AuthorizeCommand from '../src/models/discord-commands/authorize-command'
+import AuthorizeCommand from '../src/models/discord-commands/authorize-command';
+import ScheduleCommand from '../src/models/discord-commands/schedule-command';
 import { equal } from 'assert';
-import { DiscordRequest, IDataAccess, MessageActionTypes } from '../src/typings';
+import { DiscordRequest, IDataAccess, MessageActionTypes, Employee, Schedule } from '../src/types';
 import { Mock, It, Times } from 'moq.ts';
+import MessageWrapper from '../src/models/message-wrapper';
+import { Message } from 'discord.js';
 
 describe('Commands', () => {
     let mockRequest: Mock<DiscordRequest>;
@@ -42,6 +45,81 @@ describe('Commands', () => {
 
             // Assert
             mockDataAccess.verify(instance => instance.authorize(It.Is(value => value === 'xyz')), Times.Exactly(1))
+        });
+
+    });
+
+    describe('Schedule Command', () => {
+        let service: ScheduleCommand;
+        let mockDataAccess: Mock<IDataAccess>;
+        let mockMessage: Mock<MessageWrapper>;
+        let mockEmployee: Employee = {
+            DiscordId: '123',
+            Name: 'Test'
+        };
+        let mockSchedule: Schedule = {
+            days: [
+                {
+                    start: new Date(),
+                    end: new Date()
+                }
+            ]
+        }
+
+        beforeEach(() => {
+            // Mock request
+            mockMessage = new Mock<MessageWrapper>();
+            mockMessage.setup(instance => instance.authorId).returns('123');
+            mockMessage.setup(instance => instance.author).returns('Test');
+            mockMessage.setup(instance => instance.replyCallback(It.IsAny())).returns(Promise.resolve<Message>(new Mock<Message>().object()));
+            
+            mockDataAccess = new Mock<IDataAccess>();
+            mockDataAccess.setup(instance => instance.getEmployee(It.IsAny())).returns(Promise.resolve<Employee>(mockEmployee));
+            mockDataAccess.setup(instance => instance.addEmployee(It.IsAny())).returns(Promise.resolve());
+            mockDataAccess.setup(instance => instance.getSchedule(It.IsAny())).returns(Promise.resolve<Schedule>(mockSchedule));
+
+            mockRequest = new Mock<DiscordRequest>();
+            mockRequest.setup(instance => instance.args).returns([]);
+            mockRequest.setup(instance => instance.message).returns(mockMessage.object());
+            mockRequest.setup(instance => instance.action).returns(MessageActionTypes.SCHEDULE);
+            mockRequest.setup(instance => instance.dataAccess).returns(mockDataAccess.object());
+
+            // Create service
+            service = new ScheduleCommand(mockRequest.object());
+        });
+
+        it('should call dataAccess twice', async () => {
+            // Arrange
+
+            // Act
+            await service.execute();
+
+            // Assert
+            mockDataAccess.verify(instance => instance.getEmployee(It.IsAny()), Times.Exactly(1));
+            mockDataAccess.verify(instance => instance.getSchedule(It.IsAny()), Times.Exactly(1));
+        });
+
+        it('should call dataAccess three times when employee doesn\'t exist', async () => {
+            // Arrange
+            mockDataAccess.setup(instance => instance.getEmployee(It.IsAny())).returns(Promise.resolve<Employee>(null));
+
+            // Act
+            await service.execute();
+
+            // Assert
+            mockDataAccess.verify(instance => instance.getEmployee(It.IsAny()), Times.Exactly(1));
+            mockDataAccess.verify(instance => instance.addEmployee(It.IsAny()), Times.Exactly(1));
+            mockDataAccess.verify(instance => instance.getSchedule(It.IsAny()), Times.Exactly(1));
+        });
+
+        it('should reply', async () => {
+            // Arrange
+
+            // Act
+            await service.execute();
+
+            // Assert
+            mockMessage.setup(instance => instance.replyCallback(It.IsAny())).returns(Promise.resolve<Message>(new Mock<Message>().object()))
         });
 
     });

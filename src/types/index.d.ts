@@ -72,8 +72,14 @@ export interface DiscordRequest {
 // Classes
 //
 
-export class Schedule {
+export interface Schedule {
+    days: ScheduleDay[];
+}
 
+export interface ScheduleDay {
+    start: Date;
+    end: Date;
+    toString(): string;
 }
 
 /**

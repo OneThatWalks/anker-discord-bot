@@ -1,5 +1,5 @@
 import { Client, Message } from 'discord.js';
-import { DiscordCommand, DiscordRequest, DiscordInvoker, MessageActionTypes, IScheduleRepo } from './typings';
+import { DiscordCommand, DiscordRequest, DiscordInvoker, MessageActionTypes, IScheduleRepo } from './types';
 import { inject, injectable } from 'tsyringe';
 import { AppConfig } from './models/app-config';
 import AuthorizeCommand from './models/discord-commands/authorize-command';

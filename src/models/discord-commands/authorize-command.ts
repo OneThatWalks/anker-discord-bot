@@ -1,4 +1,4 @@
-import { DiscordCommand, DiscordRequest } from "../../typings";
+import { DiscordCommand, DiscordRequest } from "../../types";
 
 /**
  * The authorize command

@@ -1,4 +1,4 @@
-import { MessageActionTypes, DiscordRequest, IDataAccess } from "./typings";
+import { MessageActionTypes, DiscordRequest, IDataAccess } from "./types";
 import MessageWrapper from "./models/message-wrapper";
 
 /**
