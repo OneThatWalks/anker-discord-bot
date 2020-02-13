@@ -32,8 +32,8 @@ export interface IEmployeeRepo {
 }
 
 export interface ITimeClockRepo {
-    recordLogin(discordId: string): void;
-    recordLogout(discordId: string): void;
+    recordLogin(discordId: string): Promise<void>;
+    recordLogout(discordId: string): Promise<void>;
 }
 
 export interface IScheduleRepo {

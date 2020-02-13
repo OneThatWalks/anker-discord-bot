@@ -13,7 +13,9 @@ class DiscordCommander implements DiscordInvoker {
      * @param authorizeCommand {DiscordCommand} The authorize code command
      */
     constructor(private authorizeCommand: DiscordCommand,
-        private scheduleCommand: DiscordCommand) {
+        private scheduleCommand: DiscordCommand,
+        private loginCommand: DiscordCommand,
+        private logoutCommand: DiscordCommand) {
 
     }
 
@@ -26,11 +28,11 @@ class DiscordCommander implements DiscordInvoker {
     }
 
     clockIn(): Promise<void> {
-        throw new Error("Method not implemented.");
+        return this.loginCommand.execute();
     }
 
     clockOut(): Promise<void> {
-        throw new Error("Method not implemented.");
+        return this.logoutCommand.execute();
     }
 
 }

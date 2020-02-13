@@ -7,6 +7,8 @@ import ScheduleCommand from "./models/discord-commands/schedule-command";
 import DiscordCommander from './discord-commander';
 import RequestProcessorImpl from './request-processor';
 import MessageWrapper from './models/message-wrapper';
+import LoginCommand from './models/discord-commands/login-command';
+import LogoutCommand from './models/discord-commands/logout-command';
 
 @injectable()
 class Bot {
@@ -41,10 +43,12 @@ class Bot {
                 // Instantiate commands for this request
                 const authCommand: DiscordCommand = new AuthorizeCommand(request);
                 const scheduleCommand: DiscordCommand = new ScheduleCommand(request);
+                const loginCommand: DiscordCommand = new LoginCommand(request);
+                const logoutCommand: DiscordCommand = new LogoutCommand(request);
 
                 // The invoker of the commands
                 // Doesn't need to know what each command does
-                const commander: DiscordInvoker = new DiscordCommander(authCommand, scheduleCommand);
+                const commander: DiscordInvoker = new DiscordCommander(authCommand, scheduleCommand, loginCommand, logoutCommand);
 
                 switch(request.action) {
                     case MessageActionTypes.AUTH_CODE: {
