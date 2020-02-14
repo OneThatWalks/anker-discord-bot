@@ -1,15 +1,15 @@
-import "reflect-metadata";
-import { DatabaseUtil } from './data-access/db-util';
-import Bot from "./bot";
 import { readFileSync } from 'fs';
-import path = require('path');
+import "reflect-metadata";
 import { container } from "tsyringe";
-import ScheduleRepo from "./data-access/schedule-repo";
-import EmployeeRepo from "./data-access/employee-repo";
-import DataAccess from "./data-access/data-access";
+import Bot from "./bot";
 import CommandExecutor from "./command-executor";
+import DataAccess from "./data-access/data-access";
+import { DatabaseUtil } from './data-access/db-util';
+import EmployeeRepo from "./data-access/employee-repo";
+import ScheduleRepo from "./data-access/schedule-repo";
 import { AppConfig } from "./models/app-config";
 import RequestProcessorImpl from "./request-processor";
+import path = require('path');
 
 const args = process.argv.slice(2)
 let configPath: string;

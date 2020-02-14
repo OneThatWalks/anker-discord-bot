@@ -1,4 +1,4 @@
-import { Database, OPEN_READWRITE, OPEN_CREATE } from "sqlite3";
+import { Database, OPEN_CREATE, OPEN_READWRITE } from "sqlite3";
 
 /**
  * Describes the database utilities

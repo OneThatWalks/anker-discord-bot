@@ -1,14 +1,14 @@
 import { Client, Message } from 'discord.js';
-import { DiscordCommand, DiscordRequest, DiscordInvoker, MessageActionTypes, IScheduleRepo } from './types';
 import { inject, injectable } from 'tsyringe';
+import DiscordCommander from './discord-commander';
 import { AppConfig } from './models/app-config';
 import AuthorizeCommand from './models/discord-commands/authorize-command';
-import ScheduleCommand from "./models/discord-commands/schedule-command";
-import DiscordCommander from './discord-commander';
-import RequestProcessorImpl from './request-processor';
-import MessageWrapper from './models/message-wrapper';
 import LoginCommand from './models/discord-commands/login-command';
 import LogoutCommand from './models/discord-commands/logout-command';
+import ScheduleCommand from "./models/discord-commands/schedule-command";
+import MessageWrapper from './models/message-wrapper';
+import RequestProcessorImpl from './request-processor';
+import { DiscordCommand, DiscordInvoker, DiscordRequest, IScheduleRepo, MessageActionTypes } from './types';
 
 @injectable()
 class Bot {

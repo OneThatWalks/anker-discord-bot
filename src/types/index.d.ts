@@ -1,4 +1,4 @@
-import { Message, StringResolvable, MessageOptions, MessageAdditions } from "discord.js";
+import { Message } from "discord.js";
 import MessageWrapper from "../models/message-wrapper";
 
 // Type definitions for [anker-discord-bot] [1.0.0]

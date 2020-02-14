@@ -1,8 +1,8 @@
-import { Employee, IEmployeeRepo } from '../types';
 import { Database } from 'sqlite3';
-import DatabaseUtil from './db-util';
-import { injectable, inject } from 'tsyringe';
+import { inject, injectable } from 'tsyringe';
 import { AppConfig } from '../models/app-config';
+import { Employee, IEmployeeRepo } from '../types';
+import DatabaseUtil from './db-util';
 
 @injectable()
 class EmployeeRepo implements IEmployeeRepo {

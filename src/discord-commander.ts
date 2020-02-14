@@ -1,4 +1,4 @@
-import { DiscordInvoker, DiscordCommand } from "./types";
+import { DiscordCommand, DiscordInvoker } from "./types";
 
 /**
  * The discord command invoker

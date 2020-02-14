@@ -1,11 +1,10 @@
-import { Schedule } from '../types';
-import { IScheduleRepo, Employee } from '../types';
-import { google } from 'googleapis';
 import { readFile, writeFile } from 'fs';
-import {injectable, inject} from "tsyringe";
-import { OAuth2Client, Credentials } from 'google-auth-library';
-import { GetTokenResponse } from 'google-auth-library/build/src/auth/oauth2client'
-import { GoogleApisConfig, AppConfig } from '../models/app-config';
+import { Credentials, OAuth2Client } from 'google-auth-library';
+import { GetTokenResponse } from 'google-auth-library/build/src/auth/oauth2client';
+import { google } from 'googleapis';
+import { inject, injectable } from "tsyringe";
+import { AppConfig, GoogleApisConfig } from '../models/app-config';
+import { Employee, IScheduleRepo, Schedule } from '../types';
 
 @injectable()
 class ScheduleRepo implements IScheduleRepo {

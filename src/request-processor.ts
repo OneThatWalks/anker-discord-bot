@@ -1,7 +1,7 @@
-import { RequestProcessor, DiscordRequest, MessageActionTypes, IDataAccess } from "./types";
-import { DiscordRequestImpl } from "./discord-request";
 import { inject, injectable } from "tsyringe";
+import { DiscordRequestImpl } from "./discord-request";
 import MessageWrapper from "./models/message-wrapper";
+import { DiscordRequest, IDataAccess, MessageActionTypes, RequestProcessor } from "./types";
 
 @injectable()
 class RequestProcessorImpl implements RequestProcessor {

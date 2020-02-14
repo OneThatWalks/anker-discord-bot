@@ -1,6 +1,6 @@
-import { ITimeClockRepo } from '../types';
-import AppConfig from '../models/app-config';
 import { inject } from 'tsyringe';
+import AppConfig from '../models/app-config';
+import { ITimeClockRepo } from '../types';
 
 class TimeClockRepo implements ITimeClockRepo {
 

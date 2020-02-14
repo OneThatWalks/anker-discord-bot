@@ -1,5 +1,5 @@
-import { ICommandExecutor, IDataAccess, CommandExecutorContext, MessageActionTypes } from './types';
-import { injectable, inject } from 'tsyringe';
+import { inject, injectable } from 'tsyringe';
+import { CommandExecutorContext, ICommandExecutor, IDataAccess, MessageActionTypes } from './types';
 
 @injectable()
 class CommandExecutor implements ICommandExecutor {

@@ -1,4 +1,4 @@
-import { Message, StringResolvable, MessageOptions, MessageAdditions } from "discord.js";
+import { Message, MessageAdditions, MessageOptions, StringResolvable } from "discord.js";
 
 /**
  * A message wrapper class

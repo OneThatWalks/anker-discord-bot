@@ -1,7 +1,6 @@
-import { Schedule, IEmployeeRepo, IScheduleRepo, ITimeClockRepo } from '../types';
-import { IDataAccess, Employee } from '../types';
-import { injectable, inject } from 'tsyringe';
+import { inject, injectable } from 'tsyringe';
 import { AppConfig } from '../models/app-config';
+import { Employee, IDataAccess, IEmployeeRepo, IScheduleRepo, ITimeClockRepo, Schedule } from '../types';
 
 @injectable()
 class DataAccess implements IDataAccess {
