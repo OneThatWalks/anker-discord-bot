@@ -3,7 +3,6 @@ import AuthorizeCommand from '../src/models/discord-commands/authorize-command';
 import ScheduleCommand from '../src/models/discord-commands/schedule-command';
 import LoginCommand from '../src/models/discord-commands/login-command';
 import LogoutCommand from '../src/models/discord-commands/logout-command';
-import { equal } from 'assert';
 import { DiscordRequest, IDataAccess, MessageActionTypes, Employee, Schedule } from '../src/types';
 import { Mock, It, Times } from 'moq.ts';
 import MessageWrapper from '../src/models/message-wrapper';
@@ -20,7 +19,7 @@ describe('Commands', () => {
             // Mock request
             mockRequest = new Mock<DiscordRequest>();
             mockDataAccess = new Mock<IDataAccess>()
-            mockDataAccess.setup(instance => instance.authorize(It.IsAny())).returns(new Promise((res, rej) => res()));
+            mockDataAccess.setup(instance => instance.authorize(It.IsAny())).returns(new Promise((res) => res()));
             mockRequest.setup(instance => instance.args).returns(['xyz']);
             mockRequest.setup(instance => instance.action).returns(MessageActionTypes.AUTH_CODE);
             mockRequest.setup(instance => instance.dataAccess).returns(mockDataAccess.object());

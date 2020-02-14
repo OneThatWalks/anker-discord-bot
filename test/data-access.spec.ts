@@ -4,7 +4,7 @@ import DataAccess from '../src/data-access/data-access';
 import { Mock, It, Times } from 'moq.ts';
 import { IEmployeeRepo, IScheduleRepo, ITimeClockRepo, Employee, Schedule } from '../src/types';
 import { equal } from 'assert';
-import { expect, assert } from 'chai';
+import { assert } from 'chai';
 
 describe('Data Access', () => {
     let service: DataAccess;
@@ -113,7 +113,7 @@ describe('Data Access', () => {
             mockScheduleRepo.setup(instance => instance.getSchedule(It.IsAny<Employee>())).returns(Promise.resolve<Schedule>({ days: null }));
 
             // Act
-            const result = await service.getSchedule(employee);
+            await service.getSchedule(employee);
 
             // Assert
             mockScheduleRepo.verify(instance => instance.getSchedule(It.IsAny<Employee>()), Times.Exactly(1));

@@ -26,6 +26,7 @@ class CommandExecutor implements ICommandExecutor {
                         await this.dataAccess.addEmployee(em);
                     }
 
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     const schedule = this.dataAccess.getSchedule(em);
                 }).catch((err) => {
                     throw err;

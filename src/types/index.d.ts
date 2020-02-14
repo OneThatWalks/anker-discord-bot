@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/interface-name-prefix */
 import { Message } from "discord.js";
 import MessageWrapper from "../models/message-wrapper";
 

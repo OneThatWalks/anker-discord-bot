@@ -11,9 +11,11 @@ class TimeClockRepo implements ITimeClockRepo {
         
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     recordLogin(discordId: string): Promise<void> {
         throw new Error("Method not implemented.");
     }    
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     recordLogout(discordId: string): Promise<void> {
         throw new Error("Method not implemented.");
     }
