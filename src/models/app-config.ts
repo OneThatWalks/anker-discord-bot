@@ -26,3 +26,5 @@ export class SqliteConfig {
     databasePath: string;
     schemaPath: string;
 }
+
+export default AppConfig;
