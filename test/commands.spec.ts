@@ -55,11 +55,11 @@ describe('Commands', () => {
         let service: ScheduleCommand;
         let mockDataAccess: Mock<IDataAccess>;
         let mockMessage: Mock<MessageWrapper>;
-        let mockEmployee: Employee = {
+        const mockEmployee: Employee = {
             DiscordId: '123',
             Name: 'Test'
         };
-        let mockSchedule: Schedule = {
+        const mockSchedule: Schedule = {
             days: [
                 {
                     start: new Date(),

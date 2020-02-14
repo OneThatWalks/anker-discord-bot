@@ -1,4 +1,4 @@
-import { Schedule, IEmployeeRepo, IScheduleRepo } from '../types';
+import { Schedule, IEmployeeRepo, IScheduleRepo, ITimeClockRepo } from '../types';
 import { IDataAccess, Employee } from '../types';
 import { injectable, inject } from 'tsyringe';
 import { AppConfig } from '../models/app-config';
@@ -13,7 +13,8 @@ class DataAccess implements IDataAccess {
      */
     constructor(@inject(AppConfig) private config: AppConfig,
                 @inject("IEmployeeRepo") private employeeRepo: IEmployeeRepo,
-                @inject("IScheduleRepo") private scheduleRepo: IScheduleRepo) {
+                @inject("IScheduleRepo") private scheduleRepo: IScheduleRepo,
+                @inject('ITimeClockRepo') private timeClockRepo: ITimeClockRepo) {
     }
 
     addEmployee(employee: Employee): Promise<void> {
@@ -28,12 +29,12 @@ class DataAccess implements IDataAccess {
         return this.employeeRepo.getEmployee(discordId);
     }
 
-    recordLogin(discordId: string): void {
-        throw new Error("Method not implemented.");
+    recordLogin(discordId: string): Promise<void> {
+        return this.timeClockRepo.recordLogin(discordId);
     }
 
-    recordLogout(discordId: string): void {
-        throw new Error("Method not implemented.");
+    recordLogout(discordId: string): Promise<void> {
+        return this.timeClockRepo.recordLogout(discordId);
     }
 
     getSchedule(employee: Employee): Promise<Schedule> {
