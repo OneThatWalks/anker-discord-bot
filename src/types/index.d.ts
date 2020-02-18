@@ -30,6 +30,7 @@ export interface IEmployeeRepo {
     addEmployee(employee: Employee): Promise<void>;
     removeEmployee(discordId: string): Promise<void>;
     getEmployee(discordId: string): Promise<Employee>;
+    getEmployees(): Promise<Employee[]>;
 }
 
 export interface ITimeClockRepo {
@@ -39,7 +40,9 @@ export interface ITimeClockRepo {
 
 export interface IScheduleRepo {
     getSchedule(employee: Employee): Promise<Schedule>;
-    getSchedules(): Promise<Schedule[]>;
+
+    // KISS
+    getSchedules(employees: Employee[]): Promise<Schedule[]>;
 
     // Potential interface
     authorize(): Promise<void>;
@@ -76,6 +79,7 @@ export interface DiscordRequest {
 
 export interface Schedule {
     days: ScheduleDay[];
+    employee: Employee;
     toString(): string;
 }
 

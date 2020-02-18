@@ -98,6 +98,10 @@ class EmployeeRepo implements IEmployeeRepo {
         });
     }
 
+    public getEmployees(): Promise<Employee[]> {
+        throw new Error('Method not implemented');
+    }
+
 }
 
 export default EmployeeRepo;

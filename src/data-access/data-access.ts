@@ -28,6 +28,11 @@ class DataAccess implements IDataAccess {
         return this.employeeRepo.getEmployee(discordId);
     }
 
+    // TODO: Support query
+    getEmployees(): Promise<Employee[]> {
+        return this.employeeRepo.getEmployees();
+    }
+
     recordLogin(discordId: string): Promise<void> {
         return this.timeClockRepo.recordLogin(discordId);
     }
@@ -40,8 +45,8 @@ class DataAccess implements IDataAccess {
         return this.scheduleRepo.getSchedule(employee);
     }
 
-    getSchedules(): Promise<Schedule[]> {
-        return this.scheduleRepo.getSchedules();
+    getSchedules(employees: Employee[]): Promise<Schedule[]> {
+        return this.scheduleRepo.getSchedules(employees);
     }
 
     authorize(): Promise<void>;

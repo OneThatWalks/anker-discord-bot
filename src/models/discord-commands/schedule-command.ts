@@ -28,7 +28,13 @@ class ScheduleCommand implements DiscordCommand {
                 break;
             }
             case 'all': {
-                const schedules = await this.request.dataAccess.getSchedules();
+                const employees: Employee[] = await this.request.dataAccess.getEmployees();
+
+                const schedules = await this.request.dataAccess.getSchedules(employees);
+
+                const result = ``;
+
+                this.request.message.replyCallback(result);
 
                 break;
             }

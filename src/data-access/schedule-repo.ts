@@ -27,7 +27,7 @@ class ScheduleRepo implements IScheduleRepo {
         this.authorize();
     }
 
-    getSchedules(): Promise<Schedule[]> {
+    getSchedules(employees: Employee[]): Promise<Schedule[]> {
         throw new Error("Method not implemented.");
     }
 
@@ -47,6 +47,7 @@ class ScheduleRepo implements IScheduleRepo {
             });
 
             const schedule = new ScheduleImpl();
+            schedule.employee = employee;
             schedule.days = [];
 
             for (const event of results.data.items) {
