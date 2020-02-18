@@ -1,14 +1,15 @@
 import { readFileSync } from 'fs';
-import "reflect-metadata";
-import { container } from "tsyringe";
-import Bot from "./bot";
-import CommandExecutor from "./command-executor";
-import DataAccess from "./data-access/data-access";
+import 'reflect-metadata';
+import { container } from 'tsyringe';
+import Bot from './bot';
+import CommandExecutor from './command-executor';
+import DataAccess from './data-access/data-access';
 import { DatabaseUtil } from './data-access/db-util';
-import EmployeeRepo from "./data-access/employee-repo";
-import ScheduleRepo from "./data-access/schedule-repo";
-import { AppConfig } from "./models/app-config";
-import RequestProcessorImpl from "./request-processor";
+import EmployeeRepo from './data-access/employee-repo';
+import ScheduleRepo from './data-access/schedule-repo';
+import TimeClockRepo from './data-access/time-clock-repo';
+import { AppConfig } from './models/app-config';
+import RequestProcessorImpl from './request-processor';
 import path = require('path');
 
 const args = process.argv.slice(2)
@@ -36,6 +37,9 @@ container.register('IScheduleRepo', {
 });
 container.register('IEmployeeRepo', {
     useClass: EmployeeRepo
+});
+container.register('ITimeClockRepo', {
+    useClass: TimeClockRepo
 });
 container.register('IDataAccess', {
     useClass: DataAccess
