@@ -13,7 +13,8 @@ class ScheduleCommand implements DiscordCommand {
         if (!employee) {
             const employee: Employee = {
                 DiscordId: this.request.message.authorId,
-                Name: this.request.message.author
+                Name: this.request.message.author,
+                Email: null
             };
 
             await this.request.dataAccess.addEmployee(employee);
@@ -21,7 +22,7 @@ class ScheduleCommand implements DiscordCommand {
 
         const schedule = await this.request.dataAccess.getSchedule(employee);
 
-        this.request.message.replyCallback([...schedule.days]);
+        this.request.message.replyCallback(schedule.toString());
     }
 }
 

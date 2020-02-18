@@ -75,6 +75,7 @@ export interface DiscordRequest {
 
 export interface Schedule {
     days: ScheduleDay[];
+    toString(): string;
 }
 
 export interface ScheduleDay {

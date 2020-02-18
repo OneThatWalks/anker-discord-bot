@@ -4,7 +4,9 @@ import { GetTokenResponse } from 'google-auth-library/build/src/auth/oauth2clien
 import { google } from 'googleapis';
 import { inject, injectable } from "tsyringe";
 import { AppConfig, GoogleApisConfig } from '../models/app-config';
-import { Employee, IScheduleRepo, Schedule } from '../types';
+import { Employee, IScheduleRepo, Schedule, ScheduleDay } from '../types';
+import ScheduleImpl from '../models/schedule';
+import ScheduleDayImpl from '../models/schedule-day';
 
 @injectable()
 class ScheduleRepo implements IScheduleRepo {
@@ -40,9 +42,22 @@ class ScheduleRepo implements IScheduleRepo {
                 timeMax: endDate.toISOString()
             });
 
-            console.log(results);
+            const schedule = new ScheduleImpl();
+            schedule.days = [];
 
-            // TODO: Do work
+            for (const event of results.data.items) {
+                // Read each event and construct schedule
+                if (event.attendees.findIndex(attendee => employee.Email === attendee.email) > -1) {
+                    const day: ScheduleDay = new ScheduleDayImpl();
+                    day.start = new Date(event.start.dateTime)
+                    day.end = new Date(event.end.dateTime);
+
+                    schedule.days.push(day);
+                }
+            }
+
+            return schedule;
+
         } catch (err) {
             console.error(err);
             throw err;
