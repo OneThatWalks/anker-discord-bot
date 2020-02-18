@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import AppConfig from '../src/models/app-config'
 import DataAccess from '../src/data-access/data-access';
 import { Mock, It, Times } from 'moq.ts';
-import { IEmployeeRepo, IScheduleRepo, ITimeClockRepo, Employee, Schedule } from '../src/types';
+import { IEmployeeRepo, IScheduleRepo, ITimeClockRepo, Employee, Schedule, ScheduleDay } from '../src/types';
 import { equal } from 'assert';
 import { assert } from 'chai';
 
@@ -34,7 +34,8 @@ describe('Data Access', () => {
             mockEmployeeRepo.setup(instance => instance.addEmployee(It.IsAny<Employee>())).returns(Promise.resolve());
             const employee: Employee = {
                 DiscordId: '123',
-                Name: 'Test'
+                Name: 'Test',
+                Email: null
             }
 
             // Act
@@ -64,7 +65,8 @@ describe('Data Access', () => {
             // Arrange
             const employee: Employee = {
                 DiscordId: '123',
-                Name: 'Test'
+                Name: 'Test',
+                Email: null
             }
             mockEmployeeRepo.setup(instance => instance.getEmployee(It.IsAny<string>())).returns(Promise.resolve<Employee>(employee));
 
@@ -108,9 +110,10 @@ describe('Data Access', () => {
             // Arrange
             const employee: Employee = {
                 DiscordId: '123',
-                Name: 'Test'
+                Name: 'Test',
+                Email: null
             }
-            mockScheduleRepo.setup(instance => instance.getSchedule(It.IsAny<Employee>())).returns(Promise.resolve<Schedule>({ days: null }));
+            mockScheduleRepo.setup(instance => instance.getSchedule(It.IsAny<Employee>())).returns(Promise.resolve<Schedule>({ days: null, employee: null }));
 
             // Act
             await service.getSchedule(employee);
@@ -123,9 +126,16 @@ describe('Data Access', () => {
             // Arrange
             const employee: Employee = {
                 DiscordId: '123',
-                Name: 'Test'
+                Name: 'Test',
+                Email: null
             }
-            mockScheduleRepo.setup(instance => instance.getSchedule(It.IsAny<Employee>())).returns(Promise.resolve<Schedule>({ days: null }));
+            const days: ScheduleDay[] = [
+                {
+                    start: new Date(),
+                    end: new Date()
+                }
+            ]
+            mockScheduleRepo.setup(instance => instance.getSchedule(It.IsAny<Employee>())).returns(Promise.resolve<Schedule>({ days: days, employee: employee }));
 
             // Act
             const result = await service.getSchedule(employee);

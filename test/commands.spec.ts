@@ -56,7 +56,8 @@ describe('Commands', () => {
         let mockMessage: Mock<MessageWrapper>;
         const mockEmployee: Employee = {
             DiscordId: '123',
-            Name: 'Test'
+            Name: 'Test',
+            Email: null
         };
         const mockSchedule: Schedule = {
             days: [
@@ -64,7 +65,8 @@ describe('Commands', () => {
                     start: new Date(),
                     end: new Date()
                 }
-            ]
+            ],
+            employee: mockEmployee
         }
 
         beforeEach(() => {

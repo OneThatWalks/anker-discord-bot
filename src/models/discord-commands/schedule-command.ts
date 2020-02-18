@@ -20,14 +20,9 @@ class ScheduleCommand implements DiscordCommand {
             await this.request.dataAccess.addEmployee(employee);
         }
 
-        switch (this.request.args[0]) {
-            case null: {
-                const schedule = await this.request.dataAccess.getSchedule(initiatorEmployee);
+        if (this.request.args.length > 0) {
 
-                this.request.message.replyCallback(`Schedule:\r\n` + schedule.toString());
-                break;
-            }
-            case 'all': {
+            if (this.request.args[0].toLowerCase() == 'all') {
                 const employees: Employee[] = await this.request.dataAccess.getEmployees();
 
                 const schedules = await this.request.dataAccess.getSchedules(employees);
@@ -35,10 +30,7 @@ class ScheduleCommand implements DiscordCommand {
                 const result = ``;
 
                 this.request.message.replyCallback(result);
-
-                break;
-            }
-            default: {
+            } else {
                 if (this.request.args[0].startsWith('<@') && this.request.args[0].endsWith('>')) {
                     // Is mention
                     let mention = this.request.args[0].slice(2, -1);
@@ -59,9 +51,11 @@ class ScheduleCommand implements DiscordCommand {
 
                     this.request.message.replyCallback(`\r\n${user.username}'s Schedule\r\n` + schedule.toString());
                 }
-
-                break;
             }
+        } else {
+            const schedule = await this.request.dataAccess.getSchedule(initiatorEmployee);
+
+            this.request.message.replyCallback(`Schedule:\r\n` + schedule.toString());
         }
 
 
