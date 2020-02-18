@@ -9,7 +9,6 @@ class MessageWrapper {
     public content: string;
     public authorId: string;
     public author: string;
-    public replyCallback: (content?: StringResolvable, options?: MessageOptions | MessageAdditions) => Promise<Message>;
 
     /**
      * Creates a message wrapper object
@@ -21,9 +20,12 @@ class MessageWrapper {
             this.content = message.content;
             this.authorId = message.author.id;
             this.author = message.author.username;
-            this.replyCallback = message.reply;
         }
+    }
 
+    
+    public replyCallback (content?: StringResolvable, options?: MessageOptions | MessageAdditions): Promise<Message> {
+        return this.message.reply(content, options);
     }
 }
 
