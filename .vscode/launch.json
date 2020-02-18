@@ -38,7 +38,8 @@
             "args": [
                 "-configFile",
                 ".\\config.json"
-            ]
+            ],
+            "preLaunchTask": "build"
         }
     ]
 }
