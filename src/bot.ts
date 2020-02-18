@@ -40,6 +40,11 @@ class Bot {
                 // Contains the message itself, the action and the args
                 const request: DiscordRequest = this.requestProcessor.getRequest(msg);
 
+                if (!request) {
+                    console.debug('No action detected');
+                    return;
+                }
+
                 // Instantiate commands for this request
                 const authCommand: DiscordCommand = new AuthorizeCommand(request);
                 const scheduleCommand: DiscordCommand = new ScheduleCommand(request);
@@ -50,13 +55,19 @@ class Bot {
                 // Doesn't need to know what each command does
                 const commander: DiscordInvoker = new DiscordCommander(authCommand, scheduleCommand, loginCommand, logoutCommand);
 
-                switch(request.action) {
+                switch (request.action) {
                     case MessageActionTypes.AUTH_CODE: {
                         await commander.authorize();
                         break;
                     }
                     case MessageActionTypes.SCHEDULE: {
                         await commander.schedule();
+                        break;
+                    }
+                    case MessageActionTypes.LOGIN: {
+                        break;
+                    }
+                    case MessageActionTypes.LOGOUT: {
                         break;
                     }
                     default:
