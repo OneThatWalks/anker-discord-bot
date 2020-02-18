@@ -8,7 +8,7 @@ import LogoutCommand from './models/discord-commands/logout-command';
 import ScheduleCommand from "./models/discord-commands/schedule-command";
 import MessageWrapper from './models/message-wrapper';
 import RequestProcessorImpl from './request-processor';
-import { DiscordCommand, DiscordInvoker, DiscordRequest, IScheduleRepo, MessageActionTypes } from './types';
+import { DiscordCommand, DiscordInvoker, DiscordRequest, MessageActionTypes } from './types';
 
 @injectable()
 class Bot {
@@ -16,8 +16,7 @@ class Bot {
     public client: Client;
 
     constructor(@inject(AppConfig) private config: AppConfig,
-        @inject("RequestProcessor") private requestProcessor: RequestProcessorImpl,
-        @inject("IScheduleRepo") private scheduleRepo: IScheduleRepo) {
+        @inject("RequestProcessor") private requestProcessor: RequestProcessorImpl) {
         this.registerClient(config.discord.token);
     }
 
