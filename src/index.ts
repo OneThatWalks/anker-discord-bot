@@ -1,3 +1,4 @@
+import { IScheduleRepo } from './types/index.d';
 import { readFileSync } from 'fs';
 import 'reflect-metadata';
 import { container } from 'tsyringe';
@@ -53,7 +54,7 @@ container.register(AppConfig, {
 // async IIFE because life is hard
 // Any unhandled exception will abort
 (async (): Promise<void> => {
-    await DatabaseUtil.executeResultsAsync(config.sqlite.databasePath, (db) => new Promise((res, rej) => {
+    await DatabaseUtil.executeNonQueryDb(config.sqlite.databasePath, (db) => new Promise((res, rej) => {
         db.exec(sqlScript, (err: Error) => {
             if (err) {
                 rej(err);
@@ -62,6 +63,8 @@ container.register(AppConfig, {
             res();
         });
     }));
+
+    container.resolve<IScheduleRepo>('IScheduleRepo').authorize();
 
     container.resolve(Bot);
 })().catch((err) => {

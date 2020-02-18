@@ -24,7 +24,6 @@ class ScheduleRepo implements IScheduleRepo {
      */
     constructor(@inject(AppConfig) private appConfig: AppConfig) {
         this.googleApisConfig = appConfig.googleapis;
-        this.authorize();
     }
 
     getSchedules(employees: Employee[]): Promise<Schedule[]> {
