@@ -9,7 +9,9 @@ class ScheduleImpl implements Schedule {
 
         const lines = orderedByStart.map(item => item.toString());
 
-        return lines.join('\r\n');
+        const result = '\r\nSchedule:\r\n' + lines.join('\r\n');
+
+        return result;
     }
 
 }
