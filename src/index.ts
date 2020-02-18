@@ -2,7 +2,6 @@ import { readFileSync } from 'fs';
 import 'reflect-metadata';
 import { container } from 'tsyringe';
 import Bot from './bot';
-import CommandExecutor from './command-executor';
 import DataAccess from './data-access/data-access';
 import { DatabaseUtil } from './data-access/db-util';
 import EmployeeRepo from './data-access/employee-repo';
@@ -46,9 +45,6 @@ container.register('IDataAccess', {
 });
 container.register('RequestProcessor', {
     useClass: RequestProcessorImpl
-});
-container.register('ICommandExecutor', {
-    useClass: CommandExecutor
 });
 container.register(AppConfig, {
     useValue: config
