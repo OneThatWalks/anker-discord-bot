@@ -40,6 +40,10 @@ class DataAccess implements IDataAccess {
         return this.scheduleRepo.getSchedule(employee);
     }
 
+    getSchedules(): Promise<Schedule[]> {
+        return this.scheduleRepo.getSchedules();
+    }
+
     authorize(): Promise<void>;
     authorize(code: string): Promise<void>;
     authorize(code?: string): Promise<void> {

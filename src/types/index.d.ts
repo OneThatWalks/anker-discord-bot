@@ -39,6 +39,7 @@ export interface ITimeClockRepo {
 
 export interface IScheduleRepo {
     getSchedule(employee: Employee): Promise<Schedule>;
+    getSchedules(): Promise<Schedule[]>;
 
     // Potential interface
     authorize(): Promise<void>;

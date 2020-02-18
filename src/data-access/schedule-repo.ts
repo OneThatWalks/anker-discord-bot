@@ -27,6 +27,10 @@ class ScheduleRepo implements IScheduleRepo {
         this.authorize();
     }
 
+    getSchedules(): Promise<Schedule[]> {
+        throw new Error("Method not implemented.");
+    }
+
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async getSchedule(employee: Employee): Promise<Schedule> {
         const calendar = google.calendar({ version: 'v3', auth: this.getClient() });
