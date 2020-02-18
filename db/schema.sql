@@ -14,4 +14,6 @@ CREATE TABLE IF NOT EXISTS TimeClock (
     FOREIGN KEY (DiscordId) REFERENCES Employee(DiscordId)
 );
 
+PRAGMA user_version = 1;
+
 COMMIT;
