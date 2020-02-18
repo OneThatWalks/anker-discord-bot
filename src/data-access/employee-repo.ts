@@ -25,9 +25,9 @@ class EmployeeRepo implements IEmployeeRepo {
 
     private _addEmployee(employee: Employee, db: Database): Promise<void> {
         return new Promise((resolve, reject) => {
-            const sql = `INSERT INTO Employee (DiscordId, Name) VALUES(?, ?)`;
+            const sql = `INSERT INTO Employee (DiscordId, Name, Email) VALUES(?, ?, ?)`;
 
-            db.run(sql, [employee.DiscordId, employee.Name], (err: Error) => {
+            db.run(sql, [employee.DiscordId, employee.Name, employee.Email], (err: Error) => {
                 if (err) {
                     reject(err);
                     return;

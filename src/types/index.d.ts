@@ -100,6 +100,7 @@ export class CommandExecutorContext {
 export class Employee {
     DiscordId: string;
     Name: string;
+    Email: string;
 }
 
 // ENUM
