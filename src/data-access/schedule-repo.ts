@@ -26,8 +26,55 @@ class ScheduleRepo implements IScheduleRepo {
         this.googleApisConfig = appConfig.googleapis;
     }
 
-    getSchedules(employees: Employee[]): Promise<Schedule[]> {
-        throw new Error("Method not implemented.");
+    async getSchedules(employees: Employee[]): Promise<Schedule[]> {
+        const calendar = google.calendar({ version: 'v3', auth: this.getClient() });
+
+        const startDate = new Date();
+        const endDate = new Date();
+        endDate.setDate(endDate.getDate() + 7);
+
+        try {
+            const results = await calendar.events.list({
+                calendarId: this.googleApisConfig.calendar.calendarId,
+                timeMin: startDate.toISOString(),
+                timeMax: endDate.toISOString()
+            });
+
+            const schedules: Schedule[] = [];
+
+            for (const event of results.data.items) {
+                // Read each event and construct schedule
+
+                for (const employee of employees) {
+                    // Iterate and check employees schedules
+
+                    const schedule = new ScheduleImpl();
+                    schedule.employee = employee;
+                    schedule.days = [];
+
+                    if (event.attendees.findIndex(attendee => employee.Email === attendee.email) > -1) {
+                        const day: ScheduleDay = new ScheduleDayImpl();
+                        day.start = new Date(event.start.dateTime)
+                        day.end = new Date(event.end.dateTime);
+
+                        schedule.days.push(day);
+                    }
+
+                    if (schedule.days.length > 0) {
+                        schedules.push(schedule);
+                    }
+                }
+            }
+
+            return schedules;
+
+        } catch (err) {
+            console.error(err);
+            throw err;
+        }
+
+        // REMARKS: Calendar id can be found in calendar sharing settings
+        return null;
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

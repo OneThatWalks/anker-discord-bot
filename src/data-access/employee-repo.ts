@@ -99,7 +99,23 @@ class EmployeeRepo implements IEmployeeRepo {
     }
 
     public getEmployees(): Promise<Employee[]> {
-        throw new Error('Method not implemented');
+        return DatabaseUtil.executeResultsAsync<Employee[]>(this.database, (db: Database) => new Promise<Employee[]>((res, rej) => {
+            const sql = `SELECT * FROM Employee`;
+
+            db.all(sql, (err: Error, rows: Employee[]) => {
+                if (err) {
+                    rej(err);
+                }
+
+                // No data, record does not exist
+                if (!rows) {
+                    res(null);
+                }
+
+                // Resolve promise
+                res(rows);
+            });
+        }));
     }
 
 }

@@ -27,7 +27,7 @@ class ScheduleCommand implements DiscordCommand {
 
                 const schedules = await this.request.dataAccess.getSchedules(employees);
 
-                const result = ``;
+                const result = `\r\n${schedules.map(s => `${this.request.message.message.client.users.get(s.employee.DiscordId)}'s Schedule\r\n${s.toString()}`).join('\r\n')}`;
 
                 this.request.message.replyCallback(result);
             } else {
