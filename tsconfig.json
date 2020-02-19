@@ -10,12 +10,12 @@
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
         "baseUrl": ".",
-        "paths": {
-            "*": [
-                "node_modules/*",
-                "src/types/*"
-            ]
-        }
+        // "paths": {
+        //     "*": [
+        //         "node_modules/*",
+        //         "src/types/*"
+        //     ]
+        // }
       },
       "include": [
           "src/**/*"
