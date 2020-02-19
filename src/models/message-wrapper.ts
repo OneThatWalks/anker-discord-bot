@@ -1,4 +1,4 @@
-import { Message, MessageAdditions, MessageOptions, StringResolvable } from "discord.js";
+import { Message, MessageAdditions, MessageOptions, StringResolvable, User } from "discord.js";
 
 /**
  * A message wrapper class
@@ -23,9 +23,12 @@ class MessageWrapper {
         }
     }
 
-    
     public replyCallback (content?: StringResolvable, options?: MessageOptions | MessageAdditions): Promise<Message> {
         return this.message.reply(content, options);
+    }
+
+    public findUser(key: string): User {
+        return this.message.client.users.get(key);
     }
 }
 
