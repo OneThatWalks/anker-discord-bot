@@ -12,6 +12,8 @@ jobs:
     - name: install
       run: yarn install
     - name: test
-      run: yarn test
+      run: |
+        TS_NODE_COMPILER_OPTIONS='{"module":"commonjs"}' \
+        yarn test
     - name: build
       run: yarn build
