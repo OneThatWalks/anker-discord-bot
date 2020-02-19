@@ -1,5 +1,5 @@
-import MessageWrapper from "./models/message-wrapper";
-import { DiscordRequest, IDataAccess, MessageActionTypes } from "./types";
+import { DiscordRequest, IDataAccess, MessageActionTypes } from '../types';
+import MessageWrapper from "./message-wrapper";
 
 /**
  * Describes a discord request

@@ -4,9 +4,9 @@ import { GetTokenResponse } from 'google-auth-library/build/src/auth/oauth2clien
 import { google } from 'googleapis';
 import { inject, injectable } from "tsyringe";
 import { AppConfig, GoogleApisConfig } from '../models/app-config';
-import { Employee, IScheduleRepo, Schedule, ScheduleDay } from '../types';
 import ScheduleImpl from '../models/schedule';
 import ScheduleDayImpl from '../models/schedule-day';
+import { Employee, IScheduleRepo, Schedule, ScheduleDay } from '../types';
 
 @injectable()
 class ScheduleRepo implements IScheduleRepo {

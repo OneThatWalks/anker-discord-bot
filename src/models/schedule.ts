@@ -1,4 +1,4 @@
-import { Schedule, ScheduleDay, Employee } from '../types';
+import { Employee, Schedule, ScheduleDay } from '../types';
 
 class ScheduleImpl implements Schedule {
 
