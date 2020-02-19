@@ -1,4 +1,4 @@
-name: CI
+name: anker-discord-bot CI
 
 on: [push]
 
@@ -13,5 +13,7 @@ jobs:
       run: yarn install
     - name: build
       run: yarn build
+    - name: install ts-node again
+      run: yarn install ts-node
     - name: test
       run: yarn test
