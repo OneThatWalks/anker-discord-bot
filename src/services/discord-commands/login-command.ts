@@ -11,8 +11,12 @@ class LoginCommand implements DiscordCommand {
 
     }
 
-    public execute(): Promise<void> {
-        return this.request.dataAccess.recordLogin(this.request.message.authorId);
+    public async execute(): Promise<void> {
+        try {
+            await this.request.dataAccess.recordLogin(this.request.message.authorId);
+        } catch (err) {
+            this.request.message.replyCallback((err as Error).message);
+        }
     }
 }
 

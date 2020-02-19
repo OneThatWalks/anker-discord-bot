@@ -64,9 +64,11 @@ class Bot {
                         break;
                     }
                     case MessageActionTypes.LOGIN: {
+                        await commander.clockIn();
                         break;
                     }
                     case MessageActionTypes.LOGOUT: {
+                        await commander.clockOut();
                         break;
                     }
                     default:

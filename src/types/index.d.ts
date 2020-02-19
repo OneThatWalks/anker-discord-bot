@@ -109,6 +109,13 @@ export class Employee {
     Email: string;
 }
 
+export class TimeClockRecord {
+    Id: number;
+    DiscordId: string;
+    LoginDateTimeUtc: Date;
+    LogoutDateTimeUtc: Date;
+}
+
 // ENUM
 
 export const enum MessageActionTypes {
