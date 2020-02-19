@@ -1,6 +1,6 @@
-import { DiscordRequestImpl } from "src/models/discord-request";
-import MessageWrapper from "src/models/message-wrapper";
-import { DiscordRequest, IDataAccess, MessageActionTypes, RequestProcessor } from "src/types";
+import { DiscordRequestImpl } from "../models/discord-request";
+import MessageWrapper from "../models/message-wrapper";
+import { DiscordRequest, IDataAccess, MessageActionTypes, RequestProcessor } from "../types";
 import { inject, injectable } from "tsyringe";
 
 @injectable()

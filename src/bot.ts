@@ -1,10 +1,10 @@
 import { Client, Message } from 'discord.js';
 import { inject, injectable } from 'tsyringe';
 import { AppConfig } from './models/app-config';
-import AuthorizeCommand from './models/discord-commands/authorize-command';
-import LoginCommand from './models/discord-commands/login-command';
-import LogoutCommand from './models/discord-commands/logout-command';
-import ScheduleCommand from "./models/discord-commands/schedule-command";
+import AuthorizeCommand from './services/discord-commands/authorize-command';
+import LoginCommand from './services/discord-commands/login-command';
+import LogoutCommand from './services/discord-commands/logout-command';
+import ScheduleCommand from "./services/discord-commands/schedule-command";
 import MessageWrapper from './models/message-wrapper';
 import DiscordCommander from './services/discord-commander';
 import RequestProcessorImpl from './services/request-processor';

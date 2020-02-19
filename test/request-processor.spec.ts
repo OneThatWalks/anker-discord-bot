@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import RequestProcessorImpl from '../src/request-processor'
+import RequestProcessorImpl from '../src/services/request-processor'
 import { equal } from 'assert';
 import { MessageActionTypes, IDataAccess } from '../src/types';
 import MessageWrapper from '../src/models/message-wrapper';

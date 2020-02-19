@@ -27,7 +27,7 @@ class ScheduleCommand implements DiscordCommand {
 
                 const schedules = await this.request.dataAccess.getSchedules(employees);
 
-                const result = `\r\n${schedules.map(s => `${this.request.message.message.client.users.get(s.employee.DiscordId)}'s Schedule\r\n${s.toString()}`).join('\r\n')}`;
+                const result = `\r\n${schedules.map(s => `${this.request.message.findUser(s.employee.DiscordId)}'s Schedule\r\n${s.toString()}`).join('\r\n')}`;
 
                 this.request.message.replyCallback(result);
             } else {
@@ -39,7 +39,7 @@ class ScheduleCommand implements DiscordCommand {
                         mention = mention.slice(1);
                     }
 
-                    const user = this.request.message.message.client.users.get(mention);
+                    const user = this.request.message.findUser(mention);
 
                     if (!user) {
                         console.debug('Unrecognized mention');
@@ -57,8 +57,6 @@ class ScheduleCommand implements DiscordCommand {
 
             this.request.message.replyCallback(`Schedule:\r\n` + schedule.toString());
         }
-
-
     }
 }
 

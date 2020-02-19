@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import AppConfig from '../src/models/app-config'
-import DataAccess from '../src/data-access/data-access';
+import DataAccess from '../src/services/data-access';
 import { Mock, It, Times } from 'moq.ts';
 import { IEmployeeRepo, IScheduleRepo, ITimeClockRepo, Employee, Schedule, ScheduleDay } from '../src/types';
 import { equal } from 'assert';
