@@ -63,9 +63,7 @@ container.register(AppConfig, {
             res();
         });
     }));
-
-    container.resolve<IScheduleRepo>('IScheduleRepo').authorize();
-
+    
     container.resolve(Bot);
 })().catch((err) => {
     console.log(err);

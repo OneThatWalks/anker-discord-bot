@@ -27,7 +27,7 @@ class ScheduleRepo implements IScheduleRepo {
     }
 
     async getSchedules(employees: Employee[]): Promise<Schedule[]> {
-        const calendar = google.calendar({ version: 'v3', auth: this.getClient() });
+        const calendar = google.calendar({ version: 'v3', auth: await this.getClient() });
 
         const startDate = new Date();
         const endDate = new Date();
@@ -79,7 +79,7 @@ class ScheduleRepo implements IScheduleRepo {
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async getSchedule(employee: Employee): Promise<Schedule> {
-        const calendar = google.calendar({ version: 'v3', auth: this.getClient() });
+        const calendar = google.calendar({ version: 'v3', auth: await this.getClient() });
 
         const startDate = new Date();
         const endDate = new Date();
@@ -121,7 +121,7 @@ class ScheduleRepo implements IScheduleRepo {
     authorize(): Promise<void>;
     authorize(code: string): Promise<void>;
     async authorize(code?: string): Promise<void> {
-        const oAuth2Client = this.getClient();
+        const oAuth2Client = await this.getClient();
 
         try {
             const tokens = await this.checkForTokens();
@@ -141,6 +141,7 @@ class ScheduleRepo implements IScheduleRepo {
                 access_type: 'offline',
                 scope: this.scope
             });
+            // TODO: Some way of messaging admin need to authenticate
             console.log(`Please visit ${authUrl} to authorize this app.  Then message the bot with !authCode {code} without curly braces`);
             return;
         }
@@ -185,7 +186,7 @@ class ScheduleRepo implements IScheduleRepo {
         });
     }
 
-    private getClient(): OAuth2Client {
+    private async getClient(): Promise<OAuth2Client> {
         if (!this.oAuth2Client) {
             this.oAuth2Client = new google.auth.OAuth2(
                 this.googleApisConfig.clientId,
@@ -193,15 +194,20 @@ class ScheduleRepo implements IScheduleRepo {
                 this.googleApisConfig.redirectUrls[0]
             );
 
+            if (!this.oAuth2Client.credentials.expiry_date) {
+                // Attempt to authorize as we create the instance of the client
+                await this.authorize();
+            }
+
             this.oAuth2Client.on('tokens', (tokens: Credentials) => {
                 if (tokens.refresh_token) {
                     this.refreshToken = tokens.refresh_token;
                     // eslint-disable-next-line @typescript-eslint/camelcase
                     this.oAuth2Client.setCredentials({ refresh_token: this.refreshToken })
-                    console.log(tokens.refresh_token);
+                    console.log(`Refresh token ${tokens.refresh_token}`);
                 }
 
-                console.log(tokens.access_token);
+                console.log(`Access token ${tokens.access_token}`);
             });
         }
 
