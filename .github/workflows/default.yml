@@ -12,7 +12,7 @@ jobs:
     - name: install
       run: yarn install
     - name: add global ts-node
-      run: yarn add -global ts-node
+      run: yarn global add ts-node
     - name: test
       run: yarn test
     - name: build
