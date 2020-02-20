@@ -1,4 +1,4 @@
 # anker-discord-bot
-![CI](https://github.com/OneThatWalks/anker-discord-bot/workflows/CI/badge.svg?branch=master)
+![anker-discord-bot CI](https://github.com/OneThatWalks/anker-discord-bot/workflows/anker-discord-bot%20CI/badge.svg)
 
 A discord bot
