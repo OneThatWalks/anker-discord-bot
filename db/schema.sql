@@ -7,10 +7,10 @@ CREATE TABLE IF NOT EXISTS Employee (
 );
 
 CREATE TABLE IF NOT EXISTS TimeClock (
-    Id INT PRIMARY KEY,
     DiscordId NVARCHAR(64),
     LoginDateTimeUtc DATETIME,
     LogoutDateTimeUtc DATETIME,
+    PRIMARY KEY (DiscordId, LoginDateTimeUtc),
     FOREIGN KEY (DiscordId) REFERENCES Employee(DiscordId)
 );
 
