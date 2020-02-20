@@ -4,6 +4,8 @@ on: [push]
 
 jobs:
   build:
+
+    name: windows CI
     
     runs-on: windows-latest
 
@@ -11,8 +13,6 @@ jobs:
     - uses: actions/checkout@v2
     - name: install
       run: yarn install
-    - name: add global ts-node
-      run: yarn global add typescript ts-node
     - name: test
       run: yarn test
     - name: build
