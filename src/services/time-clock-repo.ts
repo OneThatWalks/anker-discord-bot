@@ -15,7 +15,7 @@ class TimeClockRepo implements ITimeClockRepo {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async recordLogin(discordId: string): Promise<void> {
+    async recordLogin(discordId: string): Promise<Date> {
         const lastLogin = await DatabaseUtil.executeResultsAsync<TimeClockRecord>(this.appConfig.sqlite.databasePath, (db: Database) => new Promise((res, rej) => {
             const sql = 'SELECT * FROM TimeClock WHERE DiscordId = ? AND LogoutDateTimeUtc IS NULL ORDER BY LoginDateTimeUtc DESC LIMIT 1;';
 
@@ -36,10 +36,12 @@ class TimeClockRepo implements ITimeClockRepo {
             throw new Error(`There was an issue logging in.  Previous clock in detected at ${lastLogin.LoginDateTimeUtc.toLocaleString()}.`);
         }
 
-        return await DatabaseUtil.executeNonQueryDb(this.appConfig.sqlite.databasePath, (db: Database) => new Promise((res, rej) => {
+        const loginDate = new Date();
+
+        await DatabaseUtil.executeNonQueryDb(this.appConfig.sqlite.databasePath, (db: Database) => new Promise((res, rej) => {
             const sql = `INSERT INTO TimeClock (DiscordId, LoginDateTimeUtc) VALUES (?, ?);`;
 
-            db.run(sql, [discordId, new Date().toISOString()], (err) => {
+            db.run(sql, [discordId, loginDate.toISOString()], (err) => {
                 if (err) {
                     rej(err);
                 }
@@ -47,10 +49,12 @@ class TimeClockRepo implements ITimeClockRepo {
                 res();
             });
         }));
+
+        return loginDate;
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async recordLogout(discordId: string): Promise<void> {
+    async recordLogout(discordId: string): Promise<Date> {
         const lastLogin = await DatabaseUtil.executeResultsAsync<TimeClockRecord>(this.appConfig.sqlite.databasePath, (db: Database) => new Promise((res, rej) => {
             const sql = 'SELECT * FROM TimeClock WHERE DiscordId = ? ORDER BY LoginDateTimeUtc DESC LIMIT 1;';
 
@@ -71,10 +75,13 @@ class TimeClockRepo implements ITimeClockRepo {
             throw new Error(`There was an issue logging out.  Previous clock out detected at ${lastLogin?.LogoutDateTimeUtc?.toLocaleString() ?? 'never'}.`);
         }
 
-        return await DatabaseUtil.executeNonQueryDb(this.appConfig.sqlite.databasePath, (db: Database) => new Promise((res, rej) => {
+        // TODO: Timezones my be nice
+        const logoutDate = new Date();
+
+        await DatabaseUtil.executeNonQueryDb(this.appConfig.sqlite.databasePath, (db: Database) => new Promise((res, rej) => {
             const sql = `UPDATE TimeClock SET LogoutDateTimeUtc = ? WHERE DiscordId = ? AND LoginDateTimeUtc = ?;`;
 
-            db.run(sql, [new Date().toISOString(), discordId, ((lastLogin.LoginDateTimeUtc as Date).toISOString == undefined ? lastLogin.LoginDateTimeUtc : lastLogin.LoginDateTimeUtc.toISOString())], (err) => {
+            db.run(sql, [logoutDate.toISOString(), discordId, ((lastLogin.LoginDateTimeUtc as Date).toISOString == undefined ? lastLogin.LoginDateTimeUtc : lastLogin.LoginDateTimeUtc.toISOString())], (err) => {
                 if (err) {
                     rej(err);
                 }
@@ -82,6 +89,8 @@ class TimeClockRepo implements ITimeClockRepo {
                 res();
             });
         }));
+
+        return logoutDate;
     }
 }
 
