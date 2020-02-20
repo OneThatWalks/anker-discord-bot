@@ -33,11 +33,11 @@ class DataAccess implements IDataAccess {
         return this.employeeRepo.getEmployees();
     }
 
-    recordLogin(discordId: string): Promise<void> {
+    recordLogin(discordId: string): Promise<Date> {
         return this.timeClockRepo.recordLogin(discordId);
     }
 
-    recordLogout(discordId: string): Promise<void> {
+    recordLogout(discordId: string): Promise<Date> {
         return this.timeClockRepo.recordLogout(discordId);
     }
 
