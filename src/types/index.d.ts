@@ -1,14 +1,10 @@
-/* eslint-disable @typescript-eslint/interface-name-prefix */
-import { Message } from "discord.js";
-import MessageWrapper from "../models/message-wrapper";
-
 // Type definitions for [anker-discord-bot] [1.0.0]
 // Project: [anker-discord-bot]
 // Definitions by: [Darrien Singleton] <https://github.com/OneThatWalks/anker-discord-bot>
 
-//
-// INTERFACES
-//
+/* eslint-disable @typescript-eslint/interface-name-prefix */
+import { Message } from "discord.js";
+import MessageWrapper from "../models/message-wrapper";
 
 /**
  * The command executor interface
@@ -17,10 +13,6 @@ export interface ICommandExecutor {
     execute(context: CommandExecutorContext): CommandExecutorContext;
 }
 
-/**
- * The bot interface
- */
-//export interface Bot {}
 
 export interface IDataAccess extends IEmployeeRepo, ITimeClockRepo, IScheduleRepo {
 
@@ -72,10 +64,56 @@ export interface DiscordRequest {
     dataAccess: IDataAccess;
 }
 
+interface DiscordClient {
+    //messageChannel(channel: string, msg: string | string[] | null): Promise<void>;
+    messageRoleUsers(role: string, msg: string | string[] | null): Promise<void>;
+}
 
-//
-// Classes
-//
+interface GoogleApiClient {
+
+    /**
+     * Authenticates this application with the google api
+     * @param code The google OAuth2.0 code
+     */
+    authorizeWithCode(code: string): Promise<void>;
+
+    /**
+     * Indicates whether this client is authorized
+     */
+    readonly isAuthorized: boolean;
+
+    /**
+     * Queries calendar events for the specified start and end date
+     * @param startDateTime The start time for the event query
+     * @param endDateTime The end time for the event query
+     * 
+     * @returns The google calendar events
+     */
+    getCalendarEvents(startDateTime: Date, endDateTime: Date): Promise<GoogleEvent[]>;
+}
+
+interface GoogleEvent {
+    /**
+     * The start of the event
+     *
+     * @type {(Date | null)}
+     */
+    start: Date | null;
+
+    /**
+     * The end of the event
+     *
+     * @type {(Date | null)}
+     */
+    end: Date | null;
+
+    /**
+     * The attendees of the event
+     *
+     * @type {(string[] | null)}
+     */
+    attendeesEmails: string[] | null;
+}
 
 export interface Schedule {
     days: ScheduleDay[];
