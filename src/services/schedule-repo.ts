@@ -1,7 +1,7 @@
 import { readFile, writeFile } from 'fs';
 import { Credentials, OAuth2Client } from 'google-auth-library';
 import { GetTokenResponse } from 'google-auth-library/build/src/auth/oauth2client';
-import { google } from 'googleapis';
+import { google, calendar_v3 } from 'googleapis';
 import { inject, injectable } from "tsyringe";
 import { AppConfig, GoogleApisConfig } from '../models/app-config';
 import ScheduleImpl from '../models/schedule';
@@ -27,7 +27,8 @@ class ScheduleRepo implements IScheduleRepo {
     }
 
     async getSchedules(employees: Employee[]): Promise<Schedule[]> {
-        const calendar = google.calendar({ version: 'v3', auth: await this.getClient() });
+        // eslint-disable-next-line @typescript-eslint/camelcase
+        const calendar: calendar_v3.Calendar = google.calendar({ version: 'v3', auth: await this.getClient() });
 
         const startDate = new Date();
         const endDate = new Date();
@@ -56,7 +57,6 @@ class ScheduleRepo implements IScheduleRepo {
                         const day: ScheduleDay = new ScheduleDayImpl();
                         day.start = new Date(event.start.dateTime)
                         day.end = new Date(event.end.dateTime);
-
                         schedule.days.push(day);
                     }
 
