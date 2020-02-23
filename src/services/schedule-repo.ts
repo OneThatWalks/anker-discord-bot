@@ -52,7 +52,7 @@ class ScheduleRepo implements IScheduleRepo {
                     schedule.employee = employee;
                     schedule.days = [];
 
-                    if (event.attendees.findIndex(attendee => employee.Email === attendee.email) > -1) {
+                    if (event.attendees.findIndex(attendee => employee.Email.toLowerCase() === attendee.email) > -1) {
                         const day: ScheduleDay = new ScheduleDayImpl();
                         day.start = new Date(event.start.dateTime)
                         day.end = new Date(event.end.dateTime);
@@ -98,7 +98,7 @@ class ScheduleRepo implements IScheduleRepo {
 
             for (const event of results.data.items) {
                 // Read each event and construct schedule
-                if (event.attendees.findIndex(attendee => employee.Email === attendee.email) > -1) {
+                if (event.attendees.findIndex(attendee => employee.Email.toLowerCase() === attendee.email) > -1) {
                     const day: ScheduleDay = new ScheduleDayImpl();
                     day.start = new Date(event.start.dateTime)
                     day.end = new Date(event.end.dateTime);
