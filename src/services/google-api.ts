@@ -184,5 +184,6 @@ class GoogleApiClientImpl implements GoogleApiClient {
         return googleApiResult.data.items.map(evt => new GoogleEventDto(evt));
     }
 
-
 }
+
+export default GoogleApiClientImpl;
