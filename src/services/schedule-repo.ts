@@ -20,27 +20,25 @@ class ScheduleRepo implements IScheduleRepo {
         try {
             const results: GoogleEvent[] = await this.googleApiClient.getCalendarEvents(startDate, endDate);
 
-            const schedules: Schedule[] = [];
+            const schedules: Schedule[] = employees.map(e => {
+                const schedule = new ScheduleImpl()
+                schedule.days = [];
+                schedule.employee = e;
+                return schedule;
+            });
 
             for (const event of results) {
                 // Read each event and construct schedule
 
                 for (const employee of employees) {
                     // Iterate and check employees schedules
-
-                    const schedule = new ScheduleImpl();
-                    schedule.employee = employee;
-                    schedule.days = [];
+                    const schedule = schedules.find(s => s.employee === employee);
 
                     if (event.attendeesEmails.findIndex(attendee => employee.Email.toLowerCase() === attendee) > -1) {
                         const day: ScheduleDay = new ScheduleDayImpl();
                         day.start = new Date(event.start)
                         day.end = new Date(event.end);
                         schedule.days.push(day);
-                    }
-
-                    if (schedule.days.length > 0) {
-                        schedules.push(schedule);
                     }
                 }
             }
