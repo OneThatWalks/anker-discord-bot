@@ -6,7 +6,7 @@ import LogoutCommand from '../src/services/discord-commands/logout-command';
 import { DiscordRequest, IDataAccess, MessageActionTypes, Employee, Schedule } from '../src/types';
 import { Mock, It, Times } from 'moq.ts';
 import MessageWrapper from '../src/models/message-wrapper';
-import { Message, User, Client, UserStore } from 'discord.js';
+import { Message, User } from 'discord.js';
 
 describe('Commands', () => {
     let mockRequest: Mock<DiscordRequest>;

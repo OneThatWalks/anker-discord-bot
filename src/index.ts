@@ -9,7 +9,6 @@ import EmployeeRepo from './services/employee-repo';
 import RequestProcessorImpl from './services/request-processor';
 import ScheduleRepo from './services/schedule-repo';
 import TimeClockRepo from './services/time-clock-repo';
-import { IScheduleRepo } from './types/index.d';
 import path = require('path');
 
 const args = process.argv.slice(2)

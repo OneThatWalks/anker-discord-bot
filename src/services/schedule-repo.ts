@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import { readFile, writeFile } from 'fs';
 import { Credentials, OAuth2Client } from 'google-auth-library';
 import { GetTokenResponse } from 'google-auth-library/build/src/auth/oauth2client';
