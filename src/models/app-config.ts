@@ -9,6 +9,10 @@ export class AppConfig {
 
 export class DiscordConfig {
     token: string;
+    defaultGuildId: string;
+
+    // Remarks
+    // Under server settings for a server click widget, there you will find the server ID
 }
 
 export class GoogleApisConfig {

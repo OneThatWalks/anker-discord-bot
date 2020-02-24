@@ -70,8 +70,7 @@ interface DiscordClient {
     on(event: 'message', listener: (message: MessageWrapper) => void): this;
     on(event: string, listener: Function): this;
 
-    //messageChannel(channel: string, msg: string | string[] | null): Promise<void>;
-    messageRoleUsers(role: string, msg: string | string[] | null): Promise<void>;
+    messageChannel(channel: string, msg: string | string[] | null): Promise<void>;
 }
 
 interface GoogleApiClient {

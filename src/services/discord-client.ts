@@ -1,7 +1,7 @@
 import { AppConfig } from './../models/app-config';
 import { DiscordClient } from "../types";
 import { singleton, inject, injectable } from "tsyringe";
-import { Client, Message } from 'discord.js';
+import { Client, Message, GuildChannel, TextChannel } from 'discord.js';
 import { EventEmitter } from 'events';
 import MessageWrapper from '../models/message-wrapper';
 
@@ -17,21 +17,35 @@ class DiscordClientImpl extends EventEmitter implements DiscordClient {
     constructor(@inject(AppConfig) private appConfig: AppConfig) {
         super();
 
+
+        // Init discord client
         this.client = new Client();
 
+        // Register ready handler
         this.client.once('ready', () => {
             console.log('Discord Client Ready!');
         });
 
+        // Login
         this.client.login(appConfig.discord.token);
 
+        // Register message handler
         this.client.on('message', (message: Message) => { this.emit('message', new MessageWrapper(message)) });
     }
 
-    messageRoleUsers(role: string, msg: string | string[]): Promise<void> {
-        throw new Error("Method not implemented.");
+    public async messageChannel(channel: string, msg: string | string[]): Promise<void> {
+        try {
+            const defaultGuild = this.client.guilds.get(this.appConfig.discord.defaultGuildId);
+            const defaultGuildChannel: GuildChannel = defaultGuild.channels.find(ch => ch.name === channel);
+    
+            // Typeguard text channel
+            if (!((defaultGuildChannel): defaultGuildChannel is TextChannel => defaultGuildChannel.type === 'text')(defaultGuildChannel)) return;
+    
+            await defaultGuildChannel.send(msg);
+        } catch (err) {
+            console.error(err);
+        }
     }
-
 
 }
 

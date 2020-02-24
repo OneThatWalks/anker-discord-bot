@@ -89,7 +89,7 @@ class GoogleApiClientImpl implements GoogleApiClient {
         });
 
         // Attempt to message admin users
-        await this.discordClient.messageRoleUsers('Administrator', `Help me authenticate with google, visit ${authUrl}.\r\nOnce you have the code, message me with the command \`!authcode {code-without-curly-braces}\``);
+        await this.discordClient.messageChannel('administration', `Help me authenticate with google, visit ${authUrl}.\r\nOnce you have the code, message me with the command \`!authcode {code-without-curly-braces}\``);
         console.info(`Authenticate bot at ${authUrl}.  Then reply to the bot with '!authcode {code-without-curly-braces}'`);
     }
 
@@ -155,7 +155,7 @@ class GoogleApiClientImpl implements GoogleApiClient {
             const { tokens } = value;
             this.oAuth2Client.setCredentials(tokens);
             console.log('Google Api Client Authenticated');
-            await this.discordClient.messageRoleUsers('Administrator', 'Google Api Client Authenticated Successfully');
+            await this.discordClient.messageChannel('administration', 'Google Api Client Authenticated Successfully');
             await this.saveTokens(tokens);
         });
     }
