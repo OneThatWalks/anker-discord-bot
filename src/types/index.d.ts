@@ -49,6 +49,7 @@ export interface DiscordInvoker {
     schedule(): Promise<void>;
     clockIn(): Promise<void>;
     clockOut(): Promise<void>;
+    help(): Promise<void>;
 }
 
 export interface DiscordRequest {
@@ -160,5 +161,6 @@ export const enum MessageActionTypes {
     SCHEDULE = 1,
     AUTH_CODE = 2,
     LOGIN = 3,
-    LOGOUT = 4
+    LOGOUT = 4,
+    HELP = 5
 }

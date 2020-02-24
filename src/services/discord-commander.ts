@@ -15,7 +15,8 @@ class DiscordCommander implements DiscordInvoker {
     constructor(private authorizeCommand: DiscordCommand,
         private scheduleCommand: DiscordCommand,
         private loginCommand: DiscordCommand,
-        private logoutCommand: DiscordCommand) {
+        private logoutCommand: DiscordCommand,
+        private helpCommand: DiscordCommand) {
 
     }
 
@@ -35,6 +36,9 @@ class DiscordCommander implements DiscordInvoker {
         return this.logoutCommand.execute();
     }
 
+    help(): Promise<void> {
+        return this.helpCommand.execute();
+    }
 }
 
 export default DiscordCommander;

@@ -46,6 +46,9 @@ class RequestProcessorImpl implements RequestProcessor {
             case 'logout': {
                 return new DiscordRequestImpl(message, MessageActionTypes.LOGOUT, args, this.dataAccess);
             }
+            case 'help': {
+                return new DiscordRequestImpl(message, MessageActionTypes.HELP, args, this.dataAccess);
+            }
             default:
                 return null;
         }

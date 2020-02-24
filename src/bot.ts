@@ -1,4 +1,4 @@
-import { Client, Message } from 'discord.js';
+import { Client } from 'discord.js';
 import { inject, injectable } from 'tsyringe';
 import { AppConfig } from './models/app-config';
 import AuthorizeCommand from './services/discord-commands/authorize-command';
@@ -9,6 +9,7 @@ import MessageWrapper from './models/message-wrapper';
 import DiscordCommander from './services/discord-commander';
 import RequestProcessorImpl from './services/request-processor';
 import { DiscordCommand, DiscordInvoker, DiscordRequest, MessageActionTypes, DiscordClient } from './types';
+import HelpCommand from './services/discord-commands/help-command';
 
 @injectable()
 class Bot {
@@ -40,10 +41,11 @@ class Bot {
                 const scheduleCommand: DiscordCommand = new ScheduleCommand(request);
                 const loginCommand: DiscordCommand = new LoginCommand(request);
                 const logoutCommand: DiscordCommand = new LogoutCommand(request);
+                const helpCommand: DiscordCommand = new HelpCommand(request);
 
                 // The invoker of the commands
                 // Doesn't need to know what each command does
-                const commander: DiscordInvoker = new DiscordCommander(authCommand, scheduleCommand, loginCommand, logoutCommand);
+                const commander: DiscordInvoker = new DiscordCommander(authCommand, scheduleCommand, loginCommand, logoutCommand, helpCommand);
 
                 switch (request.action) {
                     case MessageActionTypes.AUTH_CODE: {
@@ -60,6 +62,10 @@ class Bot {
                     }
                     case MessageActionTypes.LOGOUT: {
                         await commander.clockOut();
+                        break;
+                    }
+                    case MessageActionTypes.HELP: {
+                        await commander.help();
                         break;
                     }
                     default:
