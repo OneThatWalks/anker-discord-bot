@@ -47,6 +47,9 @@ class DiscordClientImpl extends EventEmitter implements DiscordClient {
         }
     }
 
+    public get userId(): string {
+        return this.client.user.id;
+    }
 }
 
 export default DiscordClientImpl;

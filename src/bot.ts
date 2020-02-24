@@ -8,7 +8,7 @@ import ScheduleCommand from "./services/discord-commands/schedule-command";
 import MessageWrapper from './models/message-wrapper';
 import DiscordCommander from './services/discord-commander';
 import RequestProcessorImpl from './services/request-processor';
-import { DiscordCommand, DiscordInvoker, DiscordRequest, MessageActionTypes } from './types';
+import { DiscordCommand, DiscordInvoker, DiscordRequest, MessageActionTypes, DiscordClient } from './types';
 
 @injectable()
 class Bot {
@@ -16,28 +16,19 @@ class Bot {
     public client: Client;
 
     constructor(@inject(AppConfig) private config: AppConfig,
-        @inject("RequestProcessor") private requestProcessor: RequestProcessorImpl) {
-        this.registerClient(config.discord.token);
+        @inject("RequestProcessor") private requestProcessor: RequestProcessorImpl,
+        @inject("DiscordClient") private discordClient: DiscordClient) {
+            this.registerClient();
     }
 
-    registerClient(token: string): void {
-        this.client = new Client();
-
-        this.client.once('ready', () => {
-            console.log('Ready!');
-        });
-
-        this.client.login(token);
-
-        this.client.on('message', async (message: Message) => {
-            if (message.author !== this.client.user) {
-                console.debug(`Processing message from ${message.author.username} Content: ${message.content}`);
-
-                const msg = new MessageWrapper(message);
+    registerClient(): void {
+        this.discordClient.on('message', async (message: MessageWrapper) => {
+            if (message.authorId !== this.discordClient.userId) {
+                console.debug(`Processing message from ${message.author} Content: ${message.content}`);
 
                 // Get the request for this message
                 // Contains the message itself, the action and the args
-                const request: DiscordRequest = this.requestProcessor.getRequest(msg);
+                const request: DiscordRequest = this.requestProcessor.getRequest(message);
 
                 if (!request) {
                     console.debug('No action detected');

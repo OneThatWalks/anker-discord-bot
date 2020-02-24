@@ -25,7 +25,7 @@ class ScheduleCommand implements DiscordCommand {
             if (this.request.args[0].toLowerCase() == 'all') {
                 const employees: Employee[] = await this.request.dataAccess.getEmployees();
 
-                const schedules = await this.request.dataAccess.getSchedules(employees);
+                const schedules = await this.request.dataAccess.getSchedules(...employees);
 
                 const result = `\r\n${schedules.map(s => `${this.request.message.findUser(s.employee.DiscordId)}'s Schedule\r\n${s.toString()}`).join('\r\n')}`;
 
@@ -47,13 +47,13 @@ class ScheduleCommand implements DiscordCommand {
 
                     const employee = await this.request.dataAccess.getEmployee(user.id);
 
-                    const schedule = await this.request.dataAccess.getSchedule(employee);
+                    const schedule = await this.request.dataAccess.getSchedules(employee);
 
                     this.request.message.replyCallback(`\r\n${user.username}'s Schedule\r\n` + schedule.toString());
                 }
             }
         } else {
-            const schedule = await this.request.dataAccess.getSchedule(initiatorEmployee);
+            const schedule = await this.request.dataAccess.getSchedules(initiatorEmployee);
 
             this.request.message.replyCallback(`Schedule:\r\n` + schedule.toString());
         }

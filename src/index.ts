@@ -10,6 +10,8 @@ import RequestProcessorImpl from './services/request-processor';
 import ScheduleRepo from './services/schedule-repo';
 import TimeClockRepo from './services/time-clock-repo';
 import path = require('path');
+import DiscordClientImpl from './services/discord-client';
+import GoogleApiClientImpl from './services/google-api';
 
 const args = process.argv.slice(2)
 let configPath: string;
@@ -48,6 +50,12 @@ container.register('RequestProcessor', {
 });
 container.register(AppConfig, {
     useValue: config
+});
+container.register('DiscordClient', {
+    useClass: DiscordClientImpl
+});
+container.register('GoogleApiClient', {
+    useClass: GoogleApiClientImpl
 });
 
 // async IIFE because life is hard

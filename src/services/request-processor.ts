@@ -28,7 +28,7 @@ class RequestProcessorImpl implements RequestProcessor {
         const matchIndex = words.findIndex(w => w === matches[0]);
 
         if (matchIndex === -1) {
-            throw new Error('Unexpected action error.  Auth code action detected but no command exists in message.');
+            throw new Error('Unexpected action error.');
         }
 
         const args = words.slice(1, words.length);

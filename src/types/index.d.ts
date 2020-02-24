@@ -31,13 +31,8 @@ export interface ITimeClockRepo {
 }
 
 export interface IScheduleRepo {
-    getSchedule(employee: Employee): Promise<Schedule>;
-
-    // KISS
-    getSchedules(employees: Employee[]): Promise<Schedule[]>;
-
-    // Potential interface
-    authorize(): Promise<void>;
+    getSchedules(...employees: Employee[]): Promise<Schedule[]>;
+    
     authorize(code: string): Promise<void>;
 }
 
@@ -65,7 +60,7 @@ export interface DiscordRequest {
 }
 
 interface DiscordClient {
-
+    readonly userId: string;
 
     on(event: 'message', listener: (message: MessageWrapper) => void): this;
     on(event: string, listener: Function): this;

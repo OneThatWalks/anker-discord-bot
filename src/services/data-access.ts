@@ -11,9 +11,9 @@ class DataAccess implements IDataAccess {
      * @param config {AppConfig} Instance of the config object
      */
     constructor(@inject(AppConfig) private config: AppConfig,
-                @inject("IEmployeeRepo") private employeeRepo: IEmployeeRepo,
-                @inject("IScheduleRepo") private scheduleRepo: IScheduleRepo,
-                @inject('ITimeClockRepo') private timeClockRepo: ITimeClockRepo) {
+        @inject("IEmployeeRepo") private employeeRepo: IEmployeeRepo,
+        @inject("IScheduleRepo") private scheduleRepo: IScheduleRepo,
+        @inject('ITimeClockRepo') private timeClockRepo: ITimeClockRepo) {
     }
 
     addEmployee(employee: Employee): Promise<void> {
@@ -41,20 +41,11 @@ class DataAccess implements IDataAccess {
         return this.timeClockRepo.recordLogout(discordId);
     }
 
-    getSchedule(employee: Employee): Promise<Schedule> {
-        return this.scheduleRepo.getSchedule(employee);
+    getSchedules(...employees: Employee[]): Promise<Schedule[]> {
+        return this.scheduleRepo.getSchedules(...employees);
     }
 
-    getSchedules(employees: Employee[]): Promise<Schedule[]> {
-        return this.scheduleRepo.getSchedules(employees);
-    }
-
-    authorize(): Promise<void>;
-    authorize(code: string): Promise<void>;
-    authorize(code?: string): Promise<void> {
-        if (!code) {
-            return this.scheduleRepo.authorize();
-        }
+    authorize(code: string): Promise<void> {
         return this.scheduleRepo.authorize(code);
     }
 
