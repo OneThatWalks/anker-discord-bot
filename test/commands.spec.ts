@@ -79,7 +79,7 @@ describe('Commands', () => {
             mockDataAccess = new Mock<IDataAccess>();
             mockDataAccess.setup(instance => instance.getEmployee(It.IsAny())).returns(Promise.resolve<Employee>(mockEmployee));
             mockDataAccess.setup(instance => instance.addEmployee(It.IsAny())).returns(Promise.resolve());
-            mockDataAccess.setup(instance => instance.getSchedule(It.IsAny())).returns(Promise.resolve<Schedule>(mockSchedule));
+            mockDataAccess.setup(instance => instance.getSchedules(It.IsAny())).returns(Promise.resolve<Schedule>(mockSchedule));
 
             mockRequest = new Mock<DiscordRequest>();
             mockRequest.setup(instance => instance.args).returns([]);
@@ -99,7 +99,7 @@ describe('Commands', () => {
 
             // Assert
             mockDataAccess.verify(instance => instance.getEmployee(It.IsAny()), Times.Exactly(1));
-            mockDataAccess.verify(instance => instance.getSchedule(It.IsAny()), Times.Exactly(1));
+            mockDataAccess.verify(instance => instance.getSchedules(It.IsAny()), Times.Exactly(1));
         });
 
         it('should call dataAccess three times when employee doesn\'t exist', async () => {
@@ -112,7 +112,7 @@ describe('Commands', () => {
             // Assert
             mockDataAccess.verify(instance => instance.getEmployee(It.IsAny()), Times.Exactly(1));
             mockDataAccess.verify(instance => instance.addEmployee(It.IsAny()), Times.Exactly(1));
-            mockDataAccess.verify(instance => instance.getSchedule(It.IsAny()), Times.Exactly(1));
+            mockDataAccess.verify(instance => instance.getSchedules(It.IsAny()), Times.Exactly(1));
         });
 
         it('should reply', async () => {
@@ -181,7 +181,7 @@ describe('Commands', () => {
             mockDataAccess.setup(instance => instance.getEmployee(It.IsAny())).returns(Promise.resolve<Employee>(mockEmployee));
             mockDataAccess.setup(instance => instance.getEmployees()).returns(Promise.resolve<Employee[]>(mockEmployees));
             mockDataAccess.setup(instance => instance.addEmployee(It.IsAny())).returns(Promise.resolve());
-            mockDataAccess.setup(instance => instance.getSchedules(It.IsAny<Employee[]>())).returns(Promise.resolve<Schedule[]>(mockSchedules));
+            mockDataAccess.setup(instance => instance.getSchedules(It.IsAny(), It.IsAny())).returns(Promise.resolve<Schedule[]>(mockSchedules));
 
             mockRequest = new Mock<DiscordRequest>();
             mockRequest.setup(instance => instance.args).returns(['all']);
@@ -201,7 +201,7 @@ describe('Commands', () => {
 
             // Assert
             mockDataAccess.verify(instance => instance.getEmployees(), Times.Exactly(1));
-            mockDataAccess.verify(instance => instance.getSchedules(It.IsAny<Employee[]>()), Times.Exactly(1));
+            mockDataAccess.verify(instance => instance.getSchedules(It.IsAny(), It.IsAny()), Times.Exactly(1));
         });
 
         it('should reply', async () => {
@@ -248,7 +248,7 @@ describe('Commands', () => {
             mockDataAccess = new Mock<IDataAccess>();
             mockDataAccess.setup(instance => instance.getEmployee(It.IsAny())).returns(Promise.resolve<Employee>(mockEmployee));
             mockDataAccess.setup(instance => instance.addEmployee(It.IsAny())).returns(Promise.resolve());
-            mockDataAccess.setup(instance => instance.getSchedule(It.IsAny<Employee[]>())).returns(Promise.resolve<Schedule>(mockSchedule));
+            mockDataAccess.setup(instance => instance.getSchedules(It.IsAny<Employee[]>())).returns(Promise.resolve<Schedule>(mockSchedule));
 
             mockRequest = new Mock<DiscordRequest>();
             mockRequest.setup(instance => instance.args).returns(['<@!123456>']);
@@ -268,7 +268,7 @@ describe('Commands', () => {
 
             // Assert
             mockDataAccess.verify(instance => instance.getEmployee(It.Is<string>(s => s === '123456')), Times.Exactly(1));
-            mockDataAccess.verify(instance => instance.getSchedule(It.IsAny<Employee>()), Times.Exactly(1));
+            mockDataAccess.verify(instance => instance.getSchedules(It.IsAny<Employee>()), Times.Exactly(1));
         });
 
         it('should reply', async () => {

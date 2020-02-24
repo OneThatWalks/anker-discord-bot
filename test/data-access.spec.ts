@@ -113,13 +113,13 @@ describe('Data Access', () => {
                 Name: 'Test',
                 Email: null
             }
-            mockScheduleRepo.setup(instance => instance.getSchedule(It.IsAny<Employee>())).returns(Promise.resolve<Schedule>({ days: null, employee: null }));
+            mockScheduleRepo.setup(instance => instance.getSchedules(It.IsAny<Employee>())).returns(Promise.resolve<Schedule[]>([{ days: null, employee: null }]));
 
             // Act
-            await service.getSchedule(employee);
+            await service.getSchedules(employee);
 
             // Assert
-            mockScheduleRepo.verify(instance => instance.getSchedule(It.IsAny<Employee>()), Times.Exactly(1));
+            mockScheduleRepo.verify(instance => instance.getSchedules(It.IsAny<Employee>()), Times.Exactly(1));
         });
 
         it('should return schedule', async () => {
@@ -135,10 +135,10 @@ describe('Data Access', () => {
                     end: new Date()
                 }
             ]
-            mockScheduleRepo.setup(instance => instance.getSchedule(It.IsAny<Employee>())).returns(Promise.resolve<Schedule>({ days: days, employee: employee }));
+            mockScheduleRepo.setup(instance => instance.getSchedules(It.IsAny<Employee>())).returns(Promise.resolve<Schedule[]>([{ days: days, employee: employee }]));
 
             // Act
-            const result = await service.getSchedule(employee);
+            const result = await service.getSchedules(employee);
 
             // Assert
             assert.isNotNull(result);
