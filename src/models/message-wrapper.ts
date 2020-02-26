@@ -1,10 +1,11 @@
-import { Message, MessageAdditions, MessageOptions, StringResolvable, User } from "discord.js";
+import { Message, User, StringResolvable, MessageOptions, MessageEmbed, MessageAttachment } from "discord.js";
+import { MessageWrapper } from "../types";
 
 /**
  * A message wrapper class
  * To make messages more unit testable
  */
-class MessageWrapper {
+class MessageWrapperImpl implements MessageWrapper {
 
     public content: string;
     public authorId: string;
@@ -23,8 +24,10 @@ class MessageWrapper {
         }
     }
 
-    public replyCallback (content?: StringResolvable, options?: MessageOptions | MessageAdditions): Promise<Message> {
-        return this.message.reply(content, options);
+    public async replyCallback(content?: StringResolvable, options?: MessageOptions | MessageEmbed | MessageAttachment | (MessageEmbed | MessageAttachment)[]): Promise<MessageWrapperImpl> {
+        const msg = await this.message.reply(content, options);
+        const wrp = new MessageWrapperImpl(msg);
+        return wrp;
     }
 
     public findUser(key: string): User {
@@ -32,4 +35,4 @@ class MessageWrapper {
     }
 }
 
-export default MessageWrapper;
+export default MessageWrapperImpl;

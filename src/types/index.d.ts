@@ -3,16 +3,6 @@
 // Definitions by: [Darrien Singleton] <https://github.com/OneThatWalks/anker-discord-bot>
 
 /* eslint-disable @typescript-eslint/interface-name-prefix */
-import { Message } from "discord.js";
-import MessageWrapper from "../models/message-wrapper";
-
-/**
- * The command executor interface
- */
-export interface ICommandExecutor {
-    execute(context: CommandExecutorContext): CommandExecutorContext;
-}
-
 
 export interface IDataAccess extends IEmployeeRepo, ITimeClockRepo, IScheduleRepo {
 
@@ -32,7 +22,7 @@ export interface ITimeClockRepo {
 
 export interface IScheduleRepo {
     getSchedules(...employees: Employee[]): Promise<Schedule[]>;
-    
+
     authorize(code: string): Promise<void>;
 }
 
@@ -127,15 +117,38 @@ export interface ScheduleDay {
     toString(): string;
 }
 
-/**
- * Describes the command execution context
- */
-export class CommandExecutorContext {
-    action: MessageActionTypes;
-    clientMessage: Message;
-    response: string;
-    // Future work clock
-    // responses: string[]
+export interface MessageWrapper {
+    /**
+     * The content of the message
+     */
+    content: string;
+
+    /**
+     * The message author snowflake
+     */
+    authorId: string;
+
+    /**
+     * The message author username
+     */
+    author: string;
+
+    /**
+     * Replies to a message object
+     * @param content The content to send
+     * @param options The optional additional arguments
+     * 
+     * @returns {Promise<MessageWrapper>} A message object that was replied
+     */
+    replyCallback(content?: string | string[], options?: unknown): Promise<MessageWrapper>;
+
+    /**
+     * Finds a user by id
+     * @param key The user identifier
+     * 
+     * @returns {unknown} The user
+     */
+    findUser(key: string): unknown;
 }
 
 /**

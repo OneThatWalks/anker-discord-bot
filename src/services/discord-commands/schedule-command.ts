@@ -1,4 +1,5 @@
 import { DiscordCommand, DiscordRequest, Employee } from "../../types";
+import { User } from "discord.js";
 
 class ScheduleCommand implements DiscordCommand {
     /**
@@ -39,7 +40,7 @@ class ScheduleCommand implements DiscordCommand {
                         mention = mention.slice(1);
                     }
 
-                    const user = this.request.message.findUser(mention);
+                    const user: User = this.request.message.findUser(mention) as User;
 
                     if (!user) {
                         console.debug('Unrecognized mention');
