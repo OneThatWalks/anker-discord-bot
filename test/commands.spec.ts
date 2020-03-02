@@ -122,7 +122,7 @@ describe('Commands', () => {
             await service.execute();
 
             // Assert
-            mockMessage.setup(instance => instance.replyCallback(It.IsAny())).returns(Promise.resolve<Message>(new Mock<Message>().object()))
+            mockMessage.verify(instance => instance.replyCallback(It.IsAny()), Times.Once());
         });
 
     });
@@ -211,7 +211,7 @@ describe('Commands', () => {
             await service.execute();
 
             // Assert
-            mockMessage.setup(instance => instance.replyCallback(It.IsAny())).returns(Promise.resolve<Message>(new Mock<Message>().object()))
+            mockMessage.verify(instance => instance.replyCallback(It.IsAny()), Times.Once());
         });
 
     });
@@ -278,7 +278,7 @@ describe('Commands', () => {
             await service.execute();
 
             // Assert
-            mockMessage.setup(instance => instance.replyCallback(It.IsAny())).returns(Promise.resolve<Message>(new Mock<Message>().object()))
+            mockMessage.verify(instance => instance.replyCallback(It.IsAny()), Times.Once());
         });
 
     });
