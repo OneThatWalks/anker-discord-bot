@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe';
 import AppConfig from '../models/app-config';
-import { ITimeClockRepo, TimeClockRecord } from '../types';
+import { ITimeClockRepo, TimeClockRecord, TimeLoggedCriteria, TimeLoggedResult } from '../types';
 import DatabaseUtil from './db-util';
 import { Database } from 'sqlite3';
 
@@ -91,6 +91,10 @@ class TimeClockRepo implements ITimeClockRepo {
         }));
 
         return logoutDate;
+    }
+
+    async getTimeLogged(discordIds: string[], criteria: TimeLoggedCriteria): Promise<TimeLoggedResult[]> {
+        throw Error('Method not implemented');
     }
 }
 

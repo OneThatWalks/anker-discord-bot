@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe';
 import { AppConfig } from '../models/app-config';
-import { Employee, IDataAccess, IEmployeeRepo, IScheduleRepo, ITimeClockRepo, Schedule } from '../types';
+import { Employee, IDataAccess, IEmployeeRepo, IScheduleRepo, ITimeClockRepo, Schedule, TimeLoggedCriteria, TimeLoggedResult } from '../types';
 
 @injectable()
 class DataAccess implements IDataAccess {
@@ -39,6 +39,10 @@ class DataAccess implements IDataAccess {
 
     recordLogout(discordId: string): Promise<Date> {
         return this.timeClockRepo.recordLogout(discordId);
+    }
+
+    getTimeLogged(discordIds: string[], criteria: TimeLoggedCriteria): Promise<TimeLoggedResult[]> {
+        return this.timeClockRepo.getTimeLogged(discordIds, criteria);
     }
 
     getSchedules(...employees: Employee[]): Promise<Schedule[]> {
