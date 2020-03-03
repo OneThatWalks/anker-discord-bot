@@ -31,7 +31,7 @@ class MessageWrapperImpl implements MessageWrapper {
     }
 
     public findUser(key: string): User {
-        return this.message.client.users.get(key);
+        return this.message.client.users.cache.get(key);
     }
 }
 

@@ -10,6 +10,7 @@ import DiscordCommander from './services/discord-commander';
 import RequestProcessorImpl from './services/request-processor';
 import { DiscordCommand, DiscordInvoker, DiscordRequest, MessageActionTypes, DiscordClient } from './types';
 import HelpCommand from './services/discord-commands/help-command';
+import TimeCommand from './services/discord-commands/time-command';
 
 @injectable()
 class Bot {
@@ -42,10 +43,11 @@ class Bot {
                 const loginCommand: DiscordCommand = new LoginCommand(request);
                 const logoutCommand: DiscordCommand = new LogoutCommand(request);
                 const helpCommand: DiscordCommand = new HelpCommand(request);
-
+                const timeCommand: DiscordCommand = new TimeCommand(request);
+                
                 // The invoker of the commands
                 // Doesn't need to know what each command does
-                const commander: DiscordInvoker = new DiscordCommander(authCommand, scheduleCommand, loginCommand, logoutCommand, helpCommand);
+                const commander: DiscordInvoker = new DiscordCommander(authCommand, scheduleCommand, loginCommand, logoutCommand, helpCommand, timeCommand);
 
                 switch (request.action) {
                     case MessageActionTypes.AUTH_CODE: {
@@ -66,6 +68,10 @@ class Bot {
                     }
                     case MessageActionTypes.HELP: {
                         await commander.help();
+                        break;
+                    }
+                    case MessageActionTypes.TIME: {
+                        await commander.time();
                         break;
                     }
                     default:

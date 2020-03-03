@@ -35,8 +35,8 @@ class DiscordClientImpl extends EventEmitter implements DiscordClient {
 
     public async messageChannel(channel: string, msg: string | string[]): Promise<void> {
         try {
-            const defaultGuild = this.client.guilds.get(this.appConfig.discord.defaultGuildId);
-            const defaultGuildChannel: GuildChannel = defaultGuild.channels.find(ch => ch.name === channel);
+            const defaultGuild = this.client.guilds.cache.get(this.appConfig.discord.defaultGuildId);
+            const defaultGuildChannel: GuildChannel = defaultGuild.channels.cache.find(ch => ch.name === channel);
     
             // Typeguard text channel
             if (!((defaultGuildChannel): defaultGuildChannel is TextChannel => defaultGuildChannel.type === 'text')(defaultGuildChannel)) return;

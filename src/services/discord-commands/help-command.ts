@@ -28,6 +28,15 @@ class HelpCommand implements DiscordCommand {
 
             \`!logout\`
             Clocks you out at the time sent
+
+            \`!time\`
+            Gets your hours logged for today
+
+            \`!time @Mention\`
+            Gets specified user's hours logged for today
+
+            \`!time [today | yesterday | week | month | year | all]\`
+            Gets your hours logged for specified criteria
             `
         );
     }

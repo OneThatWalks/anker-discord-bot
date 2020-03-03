@@ -18,6 +18,7 @@ export interface IEmployeeRepo {
 export interface ITimeClockRepo {
     recordLogin(discordId: string): Promise<Date>;
     recordLogout(discordId: string): Promise<Date>;
+    getTimeLogged(discordIds: string[], criteria: TimeLoggedCriteria): Promise<TimeLoggedResult[]>;
 }
 
 export interface IScheduleRepo {
@@ -40,6 +41,7 @@ export interface DiscordInvoker {
     clockIn(): Promise<void>;
     clockOut(): Promise<void>;
     help(): Promise<void>;
+    time(): Promise<void>;
 }
 
 export interface DiscordRequest {
@@ -117,6 +119,12 @@ export interface ScheduleDay {
     toString(): string;
 }
 
+export interface TimeLoggedResult {
+    discordId: string;
+    time: number;
+    criteria: TimeLoggedCriteria;
+}
+
 export interface MessageWrapper {
     /**
      * The content of the message
@@ -169,11 +177,14 @@ export class TimeClockRecord {
 
 // ENUM
 
+export type TimeLoggedCriteria = 'today' | 'yesterday' | 'week' | 'month' | 'year' | 'all';
+
 export const enum MessageActionTypes {
     NONE = 0,
     SCHEDULE = 1,
     AUTH_CODE = 2,
     LOGIN = 3,
     LOGOUT = 4,
-    HELP = 5
+    HELP = 5,
+    TIME = 6
 }

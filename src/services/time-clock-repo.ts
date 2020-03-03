@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe';
 import AppConfig from '../models/app-config';
-import { ITimeClockRepo, TimeClockRecord } from '../types';
+import { ITimeClockRepo, TimeClockRecord, TimeLoggedCriteria, TimeLoggedResult } from '../types';
 import DatabaseUtil from './db-util';
 import { Database } from 'sqlite3';
 
@@ -91,6 +91,56 @@ class TimeClockRepo implements ITimeClockRepo {
         }));
 
         return logoutDate;
+    }
+
+    async getTimeLogged(discordIds: string[], criteria: TimeLoggedCriteria): Promise<TimeLoggedResult[]> {
+        let start: Date;
+
+        switch (criteria) {
+            case 'today':
+                start = new Date();
+                start.setHours(0, 0, 0, 0);
+                break;
+            case 'yesterday':
+                start = new Date();
+                start.setDate(start.getDate() - 1)
+                start.setHours(0, 0, 0, 0);
+                break;
+            case 'week':
+                start = new Date();
+                start.setDate(start.getDate() - start.getDay());
+                break;
+            case 'month':
+                start = new Date();
+                start.setDate(start.getDate() - start.getDate() + 1);
+                start.setHours(0, 0, 0, 0);
+                break;
+            case 'year':
+                start = new Date();
+                start.setMonth(0, 1);
+                start.setHours(0, 0, 0, 0);
+                break;
+            case 'all':
+                start = new Date(0);
+                break;
+        }
+
+        const results = await DatabaseUtil.executeResultsAsync<TimeLoggedResult[]>(this.appConfig.sqlite.databasePath, (db: Database) => new Promise((res, rej) => {
+            const sql =
+                `SELECT DiscordId as 'discordId', SUM(JULIANDAY(LogoutDateTimeUtc) - JULIANDAY(LoginDateTimeUtc)) * 24 AS 'time', '${criteria}' as 'criteria' FROM TimeClock ` +
+                `WHERE DiscordId IN (${discordIds.map((value: string,  index: number) => `'${value}'${index === discordIds.length - 1 ? '' : ','}`)}) AND LoginDateTimeUtc > '${start.toISOString()}' ` +
+                'GROUP BY DiscordId;';
+
+            db.all(sql, (err: Error, rows: TimeLoggedResult[]) => {
+                if (err) {
+                    rej(err);
+                }
+
+                res(rows);
+            });
+        }));
+
+        return results;
     }
 }
 
