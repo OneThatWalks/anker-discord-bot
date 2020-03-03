@@ -1,4 +1,4 @@
-import { DiscordCommand, DiscordRequest, TimeLoggedCriteria } from "../../types";
+import { DiscordCommand, DiscordRequest, TimeLoggedCriteria, TimeLoggedResult } from "../../types";
 import { isTimeLoggedCriteria } from "../../util";
 
 class TimeCommand implements DiscordCommand {
@@ -26,8 +26,17 @@ class TimeCommand implements DiscordCommand {
             timeLoggedCriteria = this.request.args[timeArgumentIndex] as TimeLoggedCriteria;
         }
 
+        let timeLogs: TimeLoggedResult[];
+
         // Gather logs
-        const timeLogs = await this.request.dataAccess.getTimeLogged(discordIds, timeLoggedCriteria);
+        try {
+            timeLogs = await this.request.dataAccess.getTimeLogged(discordIds, timeLoggedCriteria);
+        } catch (err) {
+            console.log(err);
+            // TODO: We can def put a request ID here for tracking
+            this.request.message.replyCallback('I am having troubles getting time right now, please try again later.');
+            return;
+        }
 
         // Format reply
         const reply = timeLogs.map(l => `\r\n${l.discordId}'s time for [${l.criteria}]: ${l.time} hours.`);

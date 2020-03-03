@@ -167,6 +167,17 @@ describe('Time Command', () => {
 
         // Assert
         mockMessageWrapper.verify(instance => instance.replyCallback(It.IsAny()), Times.Once());
-    })
+    });
+
+    it('should reply when dal fails', async () => {
+        // Arrange
+        mockDataAccess.setup(instance => instance.getTimeLogged(It.IsAny<string[]>(), It.IsAny<TimeLoggedCriteria>())).throws(new Error('Some test error'));
+
+        // Act
+        await command.execute();
+
+        // Assert
+        mockMessageWrapper.verify(instance => instance.replyCallback(It.IsAny()), Times.Once());
+    });
 
 });
