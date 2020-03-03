@@ -1,5 +1,6 @@
 import { DiscordCommand, DiscordRequest, TimeLoggedCriteria, TimeLoggedResult } from "../../types";
 import { isTimeLoggedCriteria } from "../../util";
+import { User } from "discord.js";
 
 class TimeCommand implements DiscordCommand {
 
@@ -10,7 +11,7 @@ class TimeCommand implements DiscordCommand {
     public async execute(): Promise<void> {
         // Find mentions if any
         const mentions = this.request.args?.filter((item: string) => item.startsWith('<@!') && item.endsWith('>')) ?? null;
-        
+
         // Track discordIds
         let discordIds: string[] = [this.request.message.authorId];
         // Push mentions
@@ -32,17 +33,36 @@ class TimeCommand implements DiscordCommand {
         try {
             timeLogs = await this.request.dataAccess.getTimeLogged(discordIds, timeLoggedCriteria);
         } catch (err) {
-            console.log(err);
+            console.error(err);
             // TODO: We can def put a request ID here for tracking
             this.request.message.replyCallback('I am having troubles getting time right now, please try again later.');
             return;
         }
 
+        // Match non returned 
+        const missingDiscords = discordIds.filter(val => timeLogs.findIndex(t => t.discordId === val) === -1);
+        // Add as 0 time logged for criteria
+        const emptyTimeLogs = missingDiscords.map(d => {
+            return {
+                criteria: timeLoggedCriteria,
+                discordId: d,
+                time: 0
+            } as TimeLoggedResult;
+        });
+        // Update array
+        timeLogs = [...timeLogs, ...emptyTimeLogs];
+
+        // Anonymous username lookup
+        const userFinder: (key: string) => string = (key: string): string => {
+            const user: User = this.request.message.findUser(key) as User;
+            return user?.username ?? 'unknown';
+        };
+
         // Format reply
-        const reply = timeLogs.map(l => `\r\n${l.discordId}'s time for [${l.criteria}]: ${l.time} hours.`);
+        const reply = timeLogs.map(l => `\r\n${userFinder(l.discordId)}'s time for [${l.criteria}]: ${l.time} hours.`);
 
         // Reply
-        this.request.message.replyCallback(reply);
+        this.request.message.replyCallback(reply.join('\r\n'));
     }
 
 }

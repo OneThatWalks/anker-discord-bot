@@ -17,6 +17,9 @@ describe('Time Command', () => {
         mockMessageWrapper
             .setup(instance => instance.replyCallback(It.IsAny()))
             .returns(Promise.resolve<MessageWrapper>(new Mock<MessageWrapper>().object()));
+        mockMessageWrapper
+            .setup(instance => instance.findUser(It.IsAny<string>()))
+            .returns({ username: 'Test' });
 
         mockDataAccess = new Mock<IDataAccess>();
         mockDataAccess
@@ -177,7 +180,30 @@ describe('Time Command', () => {
         await command.execute();
 
         // Assert
-        mockMessageWrapper.verify(instance => instance.replyCallback(It.IsAny()), Times.Once());
+        mockMessageWrapper.verify(instance => instance.replyCallback(It.Is<string>(s => s.includes('having troubles'))), Times.Once());
+    });
+
+    it('should reply no time when no time', async () => {
+        // Arrange
+        mockDataAccess
+            .setup(instance => instance.getTimeLogged(It.IsAny<string[]>(), It.IsAny<TimeLoggedCriteria>()))
+            .returns([]);
+
+        // Act
+        await command.execute();
+
+        // Assert
+        mockMessageWrapper.verify(instance => instance.replyCallback(It.Is<string>(s => s.includes('0 hours'))), Times.Once());
+    });
+
+    it('should call for user info when replying', async () => {
+        // Arrange
+
+        // Act
+        await command.execute();
+
+        // Assert
+        mockMessageWrapper.verify(instance => instance.replyCallback(It.Is<string>(s => s.includes('Test\'s time'))), Times.Once());
     });
 
 });
