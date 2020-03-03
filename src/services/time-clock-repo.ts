@@ -127,8 +127,8 @@ class TimeClockRepo implements ITimeClockRepo {
 
         const results = await DatabaseUtil.executeResultsAsync<TimeLoggedResult[]>(this.appConfig.sqlite.databasePath, (db: Database) => new Promise((res, rej) => {
             const sql =
-                `SELECT DiscordId, SUM(JULIANDAY(LogoutDateTimeUtc) - JULIANDAY(LoginDateTimeUtc)) * 24 AS Time, '${criteria}' as Criteria FROM TimeClock` +
-                `WHERE DiscordId IN (${discordIds.map((value: string,  index: number) => `${value}${index === discordIds.length - 1 ? '' : ','}`)}) AND LoginDateTimeUtc > '${start.toISOString()}'` +
+                `SELECT DiscordId as 'discordId', SUM(JULIANDAY(LogoutDateTimeUtc) - JULIANDAY(LoginDateTimeUtc)) * 24 AS 'time', '${criteria}' as 'criteria' FROM TimeClock ` +
+                `WHERE DiscordId IN (${discordIds.map((value: string,  index: number) => `'${value}'${index === discordIds.length - 1 ? '' : ','}`)}) AND LoginDateTimeUtc > '${start.toISOString()}' ` +
                 'GROUP BY DiscordId;';
 
             db.all(sql, (err: Error, rows: TimeLoggedResult[]) => {
