@@ -49,6 +49,9 @@ class RequestProcessorImpl implements RequestProcessor {
             case 'help': {
                 return new DiscordRequestImpl(message, MessageActionTypes.HELP, args, this.dataAccess);
             }
+            case 'time': {
+                return new DiscordRequestImpl(message, MessageActionTypes.TIME, args, this.dataAccess);
+            }
             default:
                 return null;
         }
