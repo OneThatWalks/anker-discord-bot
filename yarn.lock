@@ -664,8 +664,8 @@ dir-glob@^3.0.1:
     path-type "^4.0.0"
 
 discord.js@discordjs/discord.js:
-  version "12.0.0-dev"
-  resolved "https://codeload.github.com/discordjs/discord.js/tar.gz/653784b56445b015a1584de1b693e57fc9069050"
+  version "12.0.1"
+  resolved "https://codeload.github.com/discordjs/discord.js/tar.gz/bfcd4befc9a6d56c4c7db5c736bd7f31524f097c"
   dependencies:
     "@discordjs/collection" "^0.1.5"
     abort-controller "^3.0.0"
