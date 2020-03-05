@@ -19,7 +19,7 @@ describe('Time Command', () => {
             .returns(Promise.resolve<MessageWrapper>(new Mock<MessageWrapper>().object()));
         mockMessageWrapper
             .setup(instance => instance.findUser(It.IsAny<string>()))
-            .returns({ username: 'Test' });
+            .callback(({ args: [discordId] }) => { return { username: `Test-${discordId}` } });
 
         mockDataAccess = new Mock<IDataAccess>();
         mockDataAccess
@@ -61,7 +61,7 @@ describe('Time Command', () => {
 
     it('should call getTimeLogged with two discordIds', async () => {
         // Arrange
-        mockRequest.setup(instance => instance.args).returns(['<@!456>']);
+        mockRequest.setup(instance => instance.args).returns(['<@!456>', '<@!789>']);
 
         // Act
         await command.execute();
@@ -203,7 +203,18 @@ describe('Time Command', () => {
         await command.execute();
 
         // Assert
-        mockMessageWrapper.verify(instance => instance.replyCallback(It.Is<string>(s => s.includes('Test\'s time'))), Times.Once());
+        mockMessageWrapper.verify(instance => instance.replyCallback(It.Is<string>(s => s.includes('Test-123\'s time'))), Times.Once());
+    });
+
+    it('should reply only for different mention', async () => {
+        // Arrange
+        mockRequest.setup(instance => instance.args).returns(['<@!456>']);
+
+        // Act
+        await command.execute();
+
+        // Assert
+        mockMessageWrapper.verify(instance => instance.replyCallback(It.Is<string>(s => s.includes('Test-456\'s time') && !s.includes('Test-123\'s time'))), Times.Once());
     });
 
 });

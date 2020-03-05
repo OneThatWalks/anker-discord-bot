@@ -11,12 +11,13 @@ class TimeCommand implements DiscordCommand {
     public async execute(): Promise<void> {
         // Find mentions if any
         const mentions = this.request.args?.filter((item: string) => item.startsWith('<@!') && item.endsWith('>')) ?? null;
+        const mentionDiscordIds = mentions.map(m => m.slice(3, -1));
 
         // Track discordIds
         let discordIds: string[] = [this.request.message.authorId];
         // Push mentions
         if (mentions && mentions.length > 0) {
-            discordIds = [...discordIds, ...mentions];
+            discordIds = [...mentionDiscordIds];
         }
 
         // Identify time criteria if provided
@@ -59,7 +60,7 @@ class TimeCommand implements DiscordCommand {
         };
 
         // Format reply
-        const reply = timeLogs.map(l => `\r\n${userFinder(l.discordId)}'s time for [${l.criteria}]: ${l.time} hours.`);
+        const reply = timeLogs.map(l => `${userFinder(l.discordId)}'s time for [${l.criteria}]: ${l.time} hours.`);
 
         // Reply
         this.request.message.replyCallback(reply.join('\r\n'));
