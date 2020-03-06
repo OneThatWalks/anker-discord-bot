@@ -29,7 +29,7 @@ describe('Time Command', () => {
                     return {
                         criteria: criteria,
                         discordId: id,
-                        time: 4
+                        time: 14400
                     } as TimeLoggedResult;
                 });
             });
@@ -193,7 +193,7 @@ describe('Time Command', () => {
         await command.execute();
 
         // Assert
-        mockMessageWrapper.verify(instance => instance.replyCallback(It.Is<string>(s => s.includes('0 hours'))), Times.Once());
+        mockMessageWrapper.verify(instance => instance.replyCallback(It.Is<string>(s => s.includes('00:00:00'))), Times.Once());
     });
 
     it('should call for user info when replying', async () => {
@@ -215,6 +215,37 @@ describe('Time Command', () => {
 
         // Assert
         mockMessageWrapper.verify(instance => instance.replyCallback(It.Is<string>(s => s.includes('Test-456\'s time') && !s.includes('Test-123\'s time'))), Times.Once());
+    });
+
+    it('should reply 4 hours', async () => {
+        // Arrange
+
+        // Act
+        await command.execute();
+
+        // Assert
+        mockMessageWrapper.verify(instance => instance.replyCallback(It.Is<string>(s => s.includes('04:00:00'))), Times.Once());
+    });
+
+    it('should reply triple digit hours', async () => {
+        // Arrange
+        mockDataAccess
+            .setup(instance => instance.getTimeLogged(It.IsAny<string[]>(), It.IsAny<TimeLoggedCriteria>()))
+            .callback(({ args: [discordIds, criteria] }) => {
+                return (discordIds as Array<string>).map(id => {
+                    return {
+                        criteria: criteria,
+                        discordId: id,
+                        time: 1036933.32400024
+                    } as TimeLoggedResult;
+                });
+            });
+
+        // Act
+        await command.execute();
+
+        // Assert
+        mockMessageWrapper.verify(instance => instance.replyCallback(It.Is<string>(s => s.includes('288:02:13'))), Times.Once());
     });
 
 });

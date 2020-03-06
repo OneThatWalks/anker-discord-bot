@@ -1,5 +1,5 @@
 import { DiscordCommand, DiscordRequest, TimeLoggedCriteria, TimeLoggedResult } from "../../types";
-import { isTimeLoggedCriteria } from "../../util";
+import { isTimeLoggedCriteria, formatSeconds } from "../../util";
 import { User } from "discord.js";
 
 class TimeCommand implements DiscordCommand {
@@ -60,7 +60,7 @@ class TimeCommand implements DiscordCommand {
         };
 
         // Format reply
-        const reply = timeLogs.map(l => `${userFinder(l.discordId)}'s time for [${l.criteria}]: ${l.time} hours.`);
+        const reply = timeLogs.map(l => `${userFinder(l.discordId)}'s time for [${l.criteria}]: ${formatSeconds(l.time)}.`);
 
         // Reply
         this.request.message.replyCallback(reply.join('\r\n'));
