@@ -33,12 +33,12 @@ class DataAccess implements IDataAccess {
         return this.employeeRepo.getEmployees();
     }
 
-    recordLogin(discordId: string): Promise<Date> {
-        return this.timeClockRepo.recordLogin(discordId);
+    recordLogin(discordId: string, date: Date): Promise<Date> {
+        return this.timeClockRepo.recordLogin(discordId, date);
     }
 
-    recordLogout(discordId: string): Promise<Date> {
-        return this.timeClockRepo.recordLogout(discordId);
+    recordLogout(discordId: string, date: Date): Promise<Date> {
+        return this.timeClockRepo.recordLogout(discordId, date);
     }
 
     getTimeLogged(discordIds: string[], criteria: TimeLoggedCriteria): Promise<TimeLoggedResult[]> {
