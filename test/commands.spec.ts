@@ -1,8 +1,6 @@
 import 'reflect-metadata';
 import AuthorizeCommand from '../src/services/discord-commands/authorize-command';
 import ScheduleCommand from '../src/services/discord-commands/schedule-command';
-import LoginCommand from '../src/services/discord-commands/login-command';
-import LogoutCommand from '../src/services/discord-commands/logout-command';
 import { DiscordRequest, IDataAccess, MessageActionTypes, Employee, Schedule } from '../src/types';
 import { Mock, It, Times } from 'moq.ts';
 import MessageWrapper from '../src/models/message-wrapper';
@@ -279,78 +277,6 @@ describe('Commands', () => {
 
             // Assert
             mockMessage.verify(instance => instance.replyCallback(It.IsAny()), Times.Once());
-        });
-
-    });
-
-    describe('Login Command', () => {
-        let service: LoginCommand;
-        let mockDataAccess: Mock<IDataAccess>;
-        let mockMessage: Mock<MessageWrapper>;
-
-        beforeEach(() => {
-            // Mock request
-            mockMessage = new Mock<MessageWrapper>();
-            mockMessage.setup(instance => instance.authorId).returns('123');
-            mockMessage.setup(instance => instance.author).returns('Test');
-            mockMessage.setup(instance => instance.replyCallback(It.IsAny())).returns(Promise.resolve<Message>(new Mock<Message>().object()));
-
-            mockDataAccess = new Mock<IDataAccess>();
-            mockDataAccess.setup(instance => instance.recordLogin(It.IsAny())).returns(Promise.resolve());
-
-            mockRequest = new Mock<DiscordRequest>();
-            mockRequest.setup(instance => instance.message).returns(mockMessage.object());
-            mockRequest.setup(instance => instance.action).returns(MessageActionTypes.LOGIN);
-            mockRequest.setup(instance => instance.dataAccess).returns(mockDataAccess.object());
-
-            // Create service
-            service = new LoginCommand(mockRequest.object());
-        });
-
-        it('should call dataAccess once', async () => {
-            // Arrange
-
-            // Act
-            await service.execute();
-
-            // Assert
-            mockDataAccess.verify(instance => instance.recordLogin(It.IsAny()), Times.Exactly(1));
-        });
-
-    });
-
-    describe('Logout Command', () => {
-        let service: LogoutCommand;
-        let mockDataAccess: Mock<IDataAccess>;
-        let mockMessage: Mock<MessageWrapper>;
-
-        beforeEach(() => {
-            // Mock request
-            mockMessage = new Mock<MessageWrapper>();
-            mockMessage.setup(instance => instance.authorId).returns('123');
-            mockMessage.setup(instance => instance.author).returns('Test');
-            mockMessage.setup(instance => instance.replyCallback(It.IsAny())).returns(Promise.resolve<Message>(new Mock<Message>().object()));
-
-            mockDataAccess = new Mock<IDataAccess>();
-            mockDataAccess.setup(instance => instance.recordLogout(It.IsAny())).returns(Promise.resolve());
-
-            mockRequest = new Mock<DiscordRequest>();
-            mockRequest.setup(instance => instance.message).returns(mockMessage.object());
-            mockRequest.setup(instance => instance.action).returns(MessageActionTypes.LOGOUT);
-            mockRequest.setup(instance => instance.dataAccess).returns(mockDataAccess.object());
-
-            // Create service
-            service = new LogoutCommand(mockRequest.object());
-        });
-
-        it('should call dataAccess once', async () => {
-            // Arrange
-
-            // Act
-            await service.execute();
-
-            // Assert
-            mockDataAccess.verify(instance => instance.recordLogout(It.IsAny()), Times.Exactly(1));
         });
 
     });
