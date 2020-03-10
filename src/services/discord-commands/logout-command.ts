@@ -22,7 +22,7 @@ class LogoutCommand implements DiscordCommand {
 
                 // Separate numbers from characters
                 const num = time[0].match(/\d+/);
-                const str = time[0].match(/([AaPp][Mm])|\b([Aa]|[Pp])/);
+                const str = time[0].match(/[AaPp][Mm]|[Aa]|[Pp]/g);
 
                 // Set am/pm if exists
                 if (str?.length > 0) {
@@ -40,7 +40,7 @@ class LogoutCommand implements DiscordCommand {
 
                 // Separate numbers from characters
                 const num = time[1].match(/\d+/);
-                const str = time[1].match(/([AaPp][Mm])|\b([Aa]|[Pp])/);
+                const str = time[1].match(/[AaPp][Mm]|[Aa]|[Pp]/g);
 
                 // Set am/pm if exists
                 // Overwrite if needed since am/pm usually exists after the hour
@@ -58,7 +58,7 @@ class LogoutCommand implements DiscordCommand {
                 if (afterTimeArgIndex < this.request.args.length) {
                     const argAfterTime = this.request.args[afterTimeArgIndex];
 
-                    const str = argAfterTime.match(/([AaPp][Mm])|\b([Aa]|[Pp])/);
+                    const str = argAfterTime.match(/[AaPp][Mm]|[Aa]|[Pp]/);
 
                     if (str?.length > 0) {
                         ampm = str[0];
@@ -69,7 +69,7 @@ class LogoutCommand implements DiscordCommand {
             if (hour) {
                 let dateHours = hour;
                 if (ampm) {
-                    if (ampm.match(/[Pp][Mm]|\b[Pp]/)?.length > 0) {
+                    if (ampm.match(/[Pp][Mm]|[Pp]/)?.length > 0) {
                         dateHours += 12;
                     }
                 }
