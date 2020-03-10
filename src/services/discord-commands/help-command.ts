@@ -26,8 +26,16 @@ class HelpCommand implements DiscordCommand {
             \`!login\`
             Clocks you in at the time sent
 
+            \`!login @8:00 AM\`
+            Clocks you in at 8 AM
+
             \`!logout\`
             Clocks you out at the time sent
+
+            \`!logout @8:00 AM\`
+            Clocks you out at 8 AM
+
+            *Note: you may not login/logout more than 7 minutes in the future*
 
             \`!time\`
             Gets your hours logged for today
