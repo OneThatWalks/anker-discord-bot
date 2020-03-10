@@ -49,6 +49,33 @@ describe('Login Command', () => {
         mockMessage.verify(instance => instance.replyCallback(It.IsAny<string>()), Times.Once());
     });
 
+    it('should not login when time param in future', async () => {
+        // Arrange
+        const date = new Date();
+        date.setHours(date.getHours() + 1);
+        mockRequest.setup(instance => instance.args).returns([`@${date.getHours()}`]);
+
+        // Act
+        await service.execute();
+
+        // Assert
+        mockDataAccess.verify(instance => instance.recordLogin(It.IsAny<string>(), It.IsAny<Date>()), Times.Never());
+        mockMessage.verify(instance => instance.replyCallback(It.Is<string>(s => s.includes('please try again'))), Times.Once());
+    });
+
+    it('should allow future login under 7 minutes in future', async () => {
+        // Arrange
+        const date = new Date();
+        date.setMinutes(date.getMinutes() + 6);
+        mockRequest.setup(instance => instance.args).returns([`@${date.getHours()}`]);
+
+        // Act
+        await service.execute();
+
+        // Assert
+        mockDataAccess.verify(instance => instance.recordLogin(It.IsAny<string>(), It.IsAny<Date>()), Times.Once());
+    });
+
 });
 
 describe('Logout Command', () => {
@@ -96,124 +123,31 @@ describe('Logout Command', () => {
         mockMessage.verify(instance => instance.replyCallback(It.IsAny<string>()), Times.Once());
     });
 
-});
+    it('should not logout when time param in future', async () => {
+        // Arrange
+        const date = new Date();
+        date.setHours(date.getHours() + 1);
+        mockRequest.setup(instance => instance.args).returns([`@${date.getHours()}`]);
 
+        // Act
+        await service.execute();
 
-describe('Login/Logout time arguments', () => {
-
-    // Test cases for parsing time between commands
-    const testCases = [
-        {
-            it: 'should parse @7:37 AM',
-            args: ['@7:37', 'AM'],
-            expect: '7:37'
-        },
-        {
-            it: 'should parse @8:03',
-            args: ['@8:03'],
-            expect: '8:03'
-        },
-        {
-            it: 'should parse @8:14am',
-            args: ['@8:14am'],
-            expect: '8:14'
-        },
-        {
-            it: 'should parse @8:14p',
-            args: ['@8:14p'],
-            expect: '20:14'
-        },
-        {
-            it: 'should parse @8p',
-            args: ['@8p'],
-            expect: '20:00'
-        },
-        {
-            it: 'should parse @4 PM',
-            args: ['@4', 'PM'],
-            expect: '16:00'
-        }
-    ];
-
-    describe('Logout Command', () => {
-        let mockRequest: Mock<DiscordRequest>;
-        let service: LogoutCommand;
-        let mockDataAccess: Mock<IDataAccess>;
-        let mockMessage: Mock<MessageWrapper>;
-
-
-        beforeEach(() => {
-            // Mock request
-            mockMessage = new Mock<MessageWrapper>();
-            mockMessage.setup(instance => instance.authorId).returns('123');
-            mockMessage.setup(instance => instance.author).returns('Test');
-            mockMessage.setup(instance => instance.replyCallback(It.IsAny())).returns(Promise.resolve<Message>(new Mock<Message>().object()));
-
-            mockDataAccess = new Mock<IDataAccess>();
-            mockDataAccess.setup(instance => instance.recordLogout(It.IsAny(), It.IsAny<Date>())).returns(Promise.resolve());
-
-            mockRequest = new Mock<DiscordRequest>();
-            mockRequest.setup(instance => instance.message).returns(mockMessage.object());
-            mockRequest.setup(instance => instance.action).returns(MessageActionTypes.LOGOUT);
-            mockRequest.setup(instance => instance.dataAccess).returns(mockDataAccess.object());
-
-            // Create service
-            service = new LogoutCommand(mockRequest.object());
-        });
-
-        testCases.forEach((testCase) => {
-            it(testCase.it, async () => {
-                // Arrange
-                mockRequest.setup(instance => instance.args).returns(testCase.args);
-
-                // Act
-                await service.execute();
-
-                // Assert
-                mockDataAccess.verify(instance => instance.recordLogout(It.IsAny(), It.Is<Date>(d => d.toString().includes(testCase.expect))));
-            });
-
-        });
+        // Assert
+        mockDataAccess.verify(instance => instance.recordLogout(It.IsAny<string>(), It.IsAny<Date>()), Times.Never());
+        mockMessage.verify(instance => instance.replyCallback(It.Is<string>(s => s.includes('please try again'))), Times.Once());
     });
 
-    describe('Login Command', () => {
-        let mockRequest: Mock<DiscordRequest>;
-        let service: LoginCommand;
-        let mockDataAccess: Mock<IDataAccess>;
-        let mockMessage: Mock<MessageWrapper>;
+    it('should allow future logout under 7 minutes in future', async () => {
+        // Arrange
+        const date = new Date();
+        date.setMinutes(date.getMinutes() + 6);
+        mockRequest.setup(instance => instance.args).returns([`@${date.getHours()}`]);
 
+        // Act
+        await service.execute();
 
-        beforeEach(() => {
-            // Mock request
-            mockMessage = new Mock<MessageWrapper>();
-            mockMessage.setup(instance => instance.authorId).returns('123');
-            mockMessage.setup(instance => instance.author).returns('Test');
-            mockMessage.setup(instance => instance.replyCallback(It.IsAny())).returns(Promise.resolve<Message>(new Mock<Message>().object()));
-
-            mockDataAccess = new Mock<IDataAccess>();
-            mockDataAccess.setup(instance => instance.recordLogin(It.IsAny(), It.IsAny<Date>())).returns(Promise.resolve());
-
-            mockRequest = new Mock<DiscordRequest>();
-            mockRequest.setup(instance => instance.message).returns(mockMessage.object());
-            mockRequest.setup(instance => instance.action).returns(MessageActionTypes.LOGIN);
-            mockRequest.setup(instance => instance.dataAccess).returns(mockDataAccess.object());
-
-            // Create service
-            service = new LoginCommand(mockRequest.object());
-        });
-
-        testCases.forEach((testCase) => {
-            it(testCase.it, async () => {
-                // Arrange
-                mockRequest.setup(instance => instance.args).returns(testCase.args);
-
-                // Act
-                await service.execute();
-
-                // Assert
-                mockDataAccess.verify(instance => instance.recordLogin(It.IsAny(), It.Is<Date>(d => d.toString().includes(testCase.expect))));
-            });
-
-        });
+        // Assert
+        mockDataAccess.verify(instance => instance.recordLogout(It.IsAny<string>(), It.IsAny<Date>()), Times.Once());
     });
+
 });
