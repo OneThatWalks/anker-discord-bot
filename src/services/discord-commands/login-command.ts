@@ -1,4 +1,5 @@
 import { DiscordCommand, DiscordRequest } from "../../types";
+import { parseTimeFromArgs } from "../../util";
 
 /**
  * The login command
@@ -12,14 +13,12 @@ class LoginCommand implements DiscordCommand {
     }
 
     public async execute(): Promise<void> {
-        // TODO: Glean time from args
-        // Variations noted
-        // !login @7:37 AM
-        // !login @8:03
-        // !login @8:14am
-        // !login @8:14p
+        // Parse date from arguments
+        // If this returns null default to now
+        const date: Date = parseTimeFromArgs(this.request.args) ?? new Date();
+        
         try {
-            const dateObj = await this.request.dataAccess.recordLogin(this.request.message.authorId);
+            const dateObj = await this.request.dataAccess.recordLogin(this.request.message.authorId, date);
             this.request.message.replyCallback(`Successfully logged in at \`${dateObj.toLocaleString()}\``);
         } catch (err) {
             this.request.message.replyCallback((err as Error).message);

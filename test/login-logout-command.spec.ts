@@ -175,4 +175,45 @@ describe('Login/Logout time arguments', () => {
 
         });
     });
+
+    describe('Login Command', () => {
+        let mockRequest: Mock<DiscordRequest>;
+        let service: LoginCommand;
+        let mockDataAccess: Mock<IDataAccess>;
+        let mockMessage: Mock<MessageWrapper>;
+
+
+        beforeEach(() => {
+            // Mock request
+            mockMessage = new Mock<MessageWrapper>();
+            mockMessage.setup(instance => instance.authorId).returns('123');
+            mockMessage.setup(instance => instance.author).returns('Test');
+            mockMessage.setup(instance => instance.replyCallback(It.IsAny())).returns(Promise.resolve<Message>(new Mock<Message>().object()));
+
+            mockDataAccess = new Mock<IDataAccess>();
+            mockDataAccess.setup(instance => instance.recordLogin(It.IsAny(), It.IsAny<Date>())).returns(Promise.resolve());
+
+            mockRequest = new Mock<DiscordRequest>();
+            mockRequest.setup(instance => instance.message).returns(mockMessage.object());
+            mockRequest.setup(instance => instance.action).returns(MessageActionTypes.LOGIN);
+            mockRequest.setup(instance => instance.dataAccess).returns(mockDataAccess.object());
+
+            // Create service
+            service = new LoginCommand(mockRequest.object());
+        });
+
+        testCases.forEach((testCase) => {
+            it(testCase.it, async () => {
+                // Arrange
+                mockRequest.setup(instance => instance.args).returns(testCase.args);
+
+                // Act
+                await service.execute();
+
+                // Assert
+                mockDataAccess.verify(instance => instance.recordLogin(It.IsAny(), It.Is<Date>(d => d.toString().includes(testCase.expect))));
+            });
+
+        });
+    });
 });
