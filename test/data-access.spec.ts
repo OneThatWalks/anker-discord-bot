@@ -82,26 +82,26 @@ describe('Data Access', () => {
     describe('recordLogin()', () => {
         it('should call time clock repo', async () => {
             // Arrange
-            mockTimeClockRepo.setup(instance => instance.recordLogin(It.IsAny<string>())).returns(Promise.resolve());
+            mockTimeClockRepo.setup(instance => instance.recordLogin(It.IsAny<string>(), It.IsAny<Date>())).returns(Promise.resolve());
 
             // Act
-            await service.recordLogin('123');
+            await service.recordLogin('123', new Date());
 
             // Assert
-            mockTimeClockRepo.verify(instance => instance.recordLogin(It.IsAny<string>()), Times.Exactly(1));
+            mockTimeClockRepo.verify(instance => instance.recordLogin(It.IsAny<string>(), It.IsAny<Date>()), Times.Exactly(1));
         });
     });
 
     describe('recordLogout()', () => {
         it('should call time clock repo', async () => {
             // Arrange
-            mockTimeClockRepo.setup(instance => instance.recordLogout(It.IsAny<string>())).returns(Promise.resolve());
+            mockTimeClockRepo.setup(instance => instance.recordLogout(It.IsAny<string>(), It.IsAny<Date>())).returns(Promise.resolve());
 
             // Act
-            await service.recordLogout('123');
+            await service.recordLogout('123', new Date());
 
             // Assert
-            mockTimeClockRepo.verify(instance => instance.recordLogout(It.IsAny<string>()), Times.Exactly(1));
+            mockTimeClockRepo.verify(instance => instance.recordLogout(It.IsAny<string>(), It.IsAny<Date>()), Times.Exactly(1));
         });
     });
 

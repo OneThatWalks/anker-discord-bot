@@ -16,8 +16,8 @@ export interface IEmployeeRepo {
 }
 
 export interface ITimeClockRepo {
-    recordLogin(discordId: string): Promise<Date>;
-    recordLogout(discordId: string): Promise<Date>;
+    recordLogin(discordId: string, date: Date): Promise<Date>;
+    recordLogout(discordId: string, date: Date): Promise<Date>;
     getTimeLogged(discordIds: string[], criteria: TimeLoggedCriteria): Promise<TimeLoggedResult[]>;
 }
 
