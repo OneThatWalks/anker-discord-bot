@@ -116,3 +116,80 @@ export function parseTimeFromArgs(args: string[]): Date {
 
     return date;
 }
+
+/**
+ * 
+ * @param criteria The interval criteria
+ */
+export function getDatesFromCriteria(criteria: TimeLoggedCriteria): [Date, Date] {
+    const startDate: Date = new Date();
+    const endDate: Date = new Date();
+
+    switch (criteria) {
+        case 'today':
+            startDate.setHours(0, 0, 0, 0);
+
+            endDate.setDate(endDate.getDate() + 1);
+            endDate.setHours(0, 0, 0, 0);
+            break;
+        case 'yesterday':
+            startDate.setDate(startDate.getDate() - 1)
+            startDate.setHours(0, 0, 0, 0);
+
+            endDate.setHours(0, 0, 0, 0);
+            break;
+        case 'week':
+            startDate.setDate(startDate.getDate() - startDate.getDay());
+            startDate.setHours(0, 0, 0, 0);
+
+            endDate.setDate(endDate.getDate() + (7 - endDate.getDay()));
+            endDate.setHours(0, 0, 0, 0);
+            break;
+        case 'last-week':
+            startDate.setDate(startDate.getDate() - startDate.getDay() - 7);
+            startDate.setHours(0, 0, 0, 0);
+
+            endDate.setDate(endDate.getDate() - endDate.getDay());
+            endDate.setHours(0, 0, 0, 0);
+            break;
+        case 'month':
+            startDate.setDate(startDate.getDate() - startDate.getDate() + 1);
+            startDate.setHours(0, 0, 0, 0);
+
+            endDate.setMonth(endDate.getMonth() + 1);
+            endDate.setDate(endDate.getDate() - endDate.getDate() + 1);
+            endDate.setHours(0, 0, 0, 0);
+            break;
+        case 'last-month':
+            startDate.setMonth(startDate.getMonth() - 1);
+            startDate.setDate(startDate.getDate() - startDate.getDate() + 1);
+            startDate.setHours(0, 0, 0, 0);
+
+            endDate.setDate(endDate.getDate() - endDate.getDate() + 1);
+            endDate.setHours(0, 0, 0, 0);
+            break;
+        case 'year':
+            startDate.setMonth(0, 1);
+            startDate.setHours(0, 0, 0, 0);
+
+            endDate.setFullYear(endDate.getFullYear() + 1);
+            endDate.setMonth(0, 1);
+            endDate.setHours(0, 0, 0, 0);
+            break;
+        case 'last-year':
+            startDate.setFullYear(startDate.getFullYear() - 1);
+            startDate.setMonth(0, 1);
+            startDate.setHours(0, 0, 0, 0);
+
+            endDate.setMonth(0, 1);
+            endDate.setHours(0, 0, 0, 0);
+            break;
+        case 'all':
+            startDate.setFullYear(2019);
+            startDate.setMonth(0, 1);
+            startDate.setHours(0, 0, 0, 0);
+            break;
+    }
+
+    return [startDate, endDate];
+}
