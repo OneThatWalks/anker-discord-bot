@@ -19,6 +19,7 @@ export interface ITimeClockRepo {
     recordLogin(discordId: string, date: Date): Promise<Date>;
     recordLogout(discordId: string, date: Date): Promise<Date>;
     getTimeLogged(discordIds: string[], criteria: TimeLoggedCriteria): Promise<TimeLoggedResult[]>;
+    getPunches(discordIds: string[], criteria: TimeLoggedCriteria): Promise<TimeClockRecord[]>;
 }
 
 export interface IScheduleRepo {
@@ -125,6 +126,11 @@ export interface TimeLoggedResult {
     criteria: TimeLoggedCriteria;
 }
 
+export interface EmployeePunchRecords {
+    employee: Employee;
+    punches: TimeClockRecord[];
+}
+
 export interface MessageWrapper {
     /**
      * The content of the message
@@ -169,7 +175,6 @@ export class Employee {
 }
 
 export class TimeClockRecord {
-    Id: number;
     DiscordId: string;
     LoginDateTimeUtc: Date;
     LogoutDateTimeUtc: Date;
@@ -177,7 +182,7 @@ export class TimeClockRecord {
 
 // ENUM
 
-export type TimeLoggedCriteria = 'today' | 'yesterday' | 'week' | 'month' | 'year' | 'all';
+export type TimeLoggedCriteria = 'today' | 'yesterday' | 'week' | 'last-week' | 'month' | 'last-month' | 'year' | 'last-year' | 'all';
 
 export const enum MessageActionTypes {
     NONE = 0,
