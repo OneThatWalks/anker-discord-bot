@@ -118,8 +118,10 @@ export function parseTimeFromArgs(args: string[]): Date {
 }
 
 /**
- * 
+ * Gets dates from a @see TimeLoggedCriteria
  * @param criteria The interval criteria
+ * 
+ * @returns a start date and end date based on the criteria
  */
 export function getDatesFromCriteria(criteria: TimeLoggedCriteria): [Date, Date] {
     const startDate: Date = new Date();
