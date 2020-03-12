@@ -11,6 +11,7 @@ import RequestProcessorImpl from './services/request-processor';
 import { DiscordCommand, DiscordInvoker, DiscordRequest, MessageActionTypes, DiscordClient } from './types';
 import HelpCommand from './services/discord-commands/help-command';
 import TimeCommand from './services/discord-commands/time-command';
+import ExportCommand from './services/discord-commands/export-command';
 
 @injectable()
 class Bot {
@@ -20,7 +21,7 @@ class Bot {
     constructor(@inject(AppConfig) private config: AppConfig,
         @inject("RequestProcessor") private requestProcessor: RequestProcessorImpl,
         @inject("DiscordClient") private discordClient: DiscordClient) {
-            this.registerClient();
+        this.registerClient();
     }
 
     registerClient(): void {
@@ -44,10 +45,11 @@ class Bot {
                 const logoutCommand: DiscordCommand = new LogoutCommand(request);
                 const helpCommand: DiscordCommand = new HelpCommand(request);
                 const timeCommand: DiscordCommand = new TimeCommand(request);
-                
+                const exportCommand: DiscordCommand = new ExportCommand(request);
+
                 // The invoker of the commands
                 // Doesn't need to know what each command does
-                const commander: DiscordInvoker = new DiscordCommander(authCommand, scheduleCommand, loginCommand, logoutCommand, helpCommand, timeCommand);
+                const commander: DiscordInvoker = new DiscordCommander(authCommand, scheduleCommand, loginCommand, logoutCommand, helpCommand, timeCommand, exportCommand);
 
                 switch (request.action) {
                     case MessageActionTypes.AUTH_CODE: {
@@ -72,6 +74,10 @@ class Bot {
                     }
                     case MessageActionTypes.TIME: {
                         await commander.time();
+                        break;
+                    }
+                    case MessageActionTypes.EXPORT: {
+                        await commander.export();
                         break;
                     }
                     default:

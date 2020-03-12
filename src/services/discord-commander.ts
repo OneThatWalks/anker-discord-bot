@@ -17,7 +17,8 @@ class DiscordCommander implements DiscordInvoker {
         private loginCommand: DiscordCommand,
         private logoutCommand: DiscordCommand,
         private helpCommand: DiscordCommand,
-        private timeCommand: DiscordCommand) {
+        private timeCommand: DiscordCommand,
+        private exportCommand: DiscordCommand) {
 
     }
 
@@ -43,6 +44,10 @@ class DiscordCommander implements DiscordInvoker {
 
     time(): Promise<void> {
         return this.timeCommand.execute();
+    }
+
+    export(): Promise<void> {
+        return this.exportCommand.execute();
     }
 }
 
