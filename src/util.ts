@@ -1,7 +1,10 @@
 import { TimeLoggedCriteria } from "./types";
 
 export function isTimeLoggedCriteria(value: string): value is TimeLoggedCriteria {
-    return ['today', 'yesterday', 'week', 'month', 'year', 'all'].includes(value);
+    return [
+        'today', 'yesterday', 'week', 'last-week', 'month',
+        'last-month', 'year', 'last-year', 'all'
+    ].includes(value);
 }
 
 export function formatSeconds(seconds: number): string {
