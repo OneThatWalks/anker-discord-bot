@@ -3,7 +3,7 @@
         "module": "commonjs",
         "noImplicitAny": true,
         "esModuleInterop": true,
-        "target": "es6",
+        "target": "ES2019",
         "moduleResolution": "node",
         "sourceMap": true,
         "outDir": "dist",
@@ -18,11 +18,11 @@
         // }
       },
       "include": [
-          "src/**/*"
+          "src/**/*",
       ],
       "exclude": [
           "node_modules",
           "**/*.spec.ts"
       ],
-      "lib": ["es6"]
+      "lib": ["ESNext"]
 }
