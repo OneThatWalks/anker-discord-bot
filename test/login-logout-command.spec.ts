@@ -52,8 +52,8 @@ describe('Login Command', () => {
     it('should not login when time param in future', async () => {
         // Arrange
         const date = new Date();
-        date.setHours(date.getHours() + 1);
-        mockRequest.setup(instance => instance.args).returns([`@${date.getHours()}`]);
+        date.setMinutes(date.getMinutes() + 21);
+        mockRequest.setup(instance => instance.args).returns([`@${date.getHours()}:${date.getMinutes()}`]);
 
         // Act
         await service.execute();
@@ -126,8 +126,8 @@ describe('Logout Command', () => {
     it('should not logout when time param in future', async () => {
         // Arrange
         const date = new Date();
-        date.setHours(date.getHours() + 1);
-        mockRequest.setup(instance => instance.args).returns([`@${date.getHours()}`]);
+        date.setMinutes(date.getMinutes() + 21);
+        mockRequest.setup(instance => instance.args).returns([`@${date.getHours()}:${date.getMinutes()}`]);
 
         // Act
         await service.execute();
