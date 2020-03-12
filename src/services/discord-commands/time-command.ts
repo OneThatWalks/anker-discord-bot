@@ -36,7 +36,7 @@ class TimeCommand implements DiscordCommand {
         } catch (err) {
             console.error(err);
             // TODO: We can def put a request ID here for tracking
-            this.request.message.replyCallback('I am having troubles getting time right now, please try again later.');
+            await this.request.message.replyCallback('I am having troubles getting time right now, please try again later.');
             return;
         }
 
@@ -63,7 +63,7 @@ class TimeCommand implements DiscordCommand {
         const reply = timeLogs.map(l => `${userFinder(l.discordId)}'s time for [${l.criteria}]: ${formatSeconds(l.time)}.`);
 
         // Reply
-        this.request.message.replyCallback(reply.join('\r\n'));
+        await this.request.message.replyCallback(reply.join('\r\n'));
     }
 
 }

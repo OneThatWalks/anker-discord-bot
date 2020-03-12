@@ -24,7 +24,7 @@ describe('Time Command', () => {
         mockDataAccess = new Mock<IDataAccess>();
         mockDataAccess
             .setup(instance => instance.getTimeLogged(It.IsAny<string[]>(), It.IsAny<TimeLoggedCriteria>()))
-            .callback(({ args: [discordIds, criteria] }) => {
+            .callback(async ({ args: [discordIds, criteria] }) => {
                 return (discordIds as Array<string>).map(id => {
                     return {
                         criteria: criteria,
