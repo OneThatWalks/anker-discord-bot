@@ -1,4 +1,4 @@
-import { TimeLoggedCriteria } from "./types";
+import { TimeLoggedCriteria, EmployeePunchRecords } from "./types";
 
 export function isTimeLoggedCriteria(value: string): value is TimeLoggedCriteria {
     return [
@@ -197,4 +197,40 @@ export function getDatesFromCriteria(criteria: TimeLoggedCriteria): [Date, Date]
     }
 
     return [startDate, endDate];
+}
+
+/**
+ * Converts employee punch records to a csv string
+ * @param employeePunchRecords Employee records to convert
+ */
+export function employeePunchRecordsToCsv(employeePunchRecords: EmployeePunchRecords[]): string {
+    let str = '';
+
+    // Apply headers
+    const headers = 'Day,Time In,Time Out,Total Time\r\n'
+    str += headers;
+
+    employeePunchRecords.forEach(ep => {
+        const employeeRow = `${ep.employee.Name},,,\r\n`
+
+        const sortedDates = ep.punches.sort((a, b) => +b.LoginDateTimeUtc - +a.LoginDateTimeUtc);
+
+        let days = '';
+
+        const diff = (start: Date, end: Date): string => {
+            const startTime = start.getTime();
+            const endTime = end.getTime();
+            const timeDiff = (endTime - startTime) / 3600000;
+            return timeDiff.toString();
+        };
+
+        sortedDates.forEach(sd => {
+            days += `${sd.LoginDateTimeUtc.toLocaleDateString()},${sd.LoginDateTimeUtc.toLocaleTimeString()},${sd.LogoutDateTimeUtc.toLocaleTimeString()},${diff(sd.LoginDateTimeUtc, sd.LogoutDateTimeUtc)}\r\n`
+        });
+
+        str += employeeRow;
+        str += days;
+    });
+
+    return str;
 }
