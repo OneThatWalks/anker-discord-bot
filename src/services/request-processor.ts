@@ -52,6 +52,9 @@ class RequestProcessorImpl implements RequestProcessor {
             case 'time': {
                 return new DiscordRequestImpl(message, MessageActionTypes.TIME, args, this.dataAccess);
             }
+            case 'export': {
+                return new DiscordRequestImpl(message, MessageActionTypes.EXPORT, args, this.dataAccess);
+            }
             default:
                 return null;
         }
