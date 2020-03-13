@@ -1,6 +1,8 @@
 import { inject, injectable } from 'tsyringe';
 import { AppConfig } from '../models/app-config';
 import { Employee, IDataAccess, IEmployeeRepo, IScheduleRepo, ITimeClockRepo, Schedule, TimeLoggedCriteria, TimeLoggedResult, TimeClockRecord } from '../types';
+import fs from 'fs';
+import * as path from 'path';
 
 @injectable()
 class DataAccess implements IDataAccess {
@@ -55,6 +57,49 @@ class DataAccess implements IDataAccess {
 
     authorize(code: string): Promise<void> {
         return this.scheduleRepo.authorize(code);
+    }
+
+    async writeAsync(filePath: string, data: string): Promise<void> {
+        await this.createDirectoryIfNotExists(filePath);
+
+        return await this._writeAsync(filePath, data);
+    }
+
+    readAsync(filePath: string): Promise<string> {
+        throw new Error("Method not implemented.");
+    }
+
+    private _writeAsync(filePath: string, data: string): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            fs.writeFile(filePath, data, (err) => {
+                if (err) {
+                    reject(err);
+                }
+                else {
+                    resolve();
+                }
+            });
+        });
+    }
+
+    private createDirectoryIfNotExists(filePath: string): Promise<void> {
+        const dir = path.dirname(filePath);
+
+        return new Promise((res, rej) => {
+            fs.exists(dir, (exists) => {
+                if (!exists) {
+                    fs.mkdir(dir, (err) => {
+                        if (err) {
+                            rej(err);
+                        } else {
+                            res();
+                        }
+                    });
+                } else {
+                    res();
+                }
+            });
+        });
     }
 
 }

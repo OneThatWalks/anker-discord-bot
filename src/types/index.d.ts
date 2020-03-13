@@ -4,8 +4,13 @@
 
 /* eslint-disable @typescript-eslint/interface-name-prefix */
 
-export interface IDataAccess extends IEmployeeRepo, ITimeClockRepo, IScheduleRepo {
+export interface IDataAccess extends IEmployeeRepo, ITimeClockRepo, IScheduleRepo, FileService {
 
+}
+
+export interface FileService {
+    writeAsync(filePath: string, data: string): Promise<void>;
+    readAsync(filePath: string): Promise<string>;
 }
 
 export interface IEmployeeRepo {
