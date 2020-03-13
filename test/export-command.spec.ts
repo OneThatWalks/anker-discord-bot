@@ -142,7 +142,7 @@ describe('Export Command', () => {
 
         // Assert
         mockMessageWrapper
-            .verify(instance => instance.replyCallback(It.IsAny<string>()));
+            .verify(instance => instance.replyCallback(It.IsAny<string>(), It.IsAny()));
     });
 
     it('should call writeAsync', async () => {
