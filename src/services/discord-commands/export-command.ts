@@ -1,13 +1,13 @@
-import { DiscordCommand, DiscordRequest, Employee, TimeClockRecord, TimeLoggedCriteria } from "../../types";
-import { isTimeLoggedCriteria } from "../../util";
+import { DiscordCommand, DiscordRequest, Employee, TimeClockRecord, TimeLoggedCriteria, EmployeePunchRecords } from "../../types";
+import { isTimeLoggedCriteria, employeePunchRecordsToCsv } from "../../util";
 
 /**
  * The export command
  */
 class ExportCommand implements DiscordCommand {
-    /**
-     *
-     */
+
+    private readonly fileLocation = '.\\exports\\';
+
     constructor(private request: DiscordRequest) {
 
     }
@@ -18,7 +18,7 @@ class ExportCommand implements DiscordCommand {
             employees = await this.request.dataAccess.getEmployees();
         } catch (err) {
             console.log(err);
-            await this.request.message.replyCallback('There was an issue completing your request.  Please try again later.\r\nIf this issue persists let an administrator know.');
+            await this.request.message.replyCallback('There was an issue completing your request, please try again later.\r\nIf this issue persists let an administrator know.');
             return;
         }
 
@@ -36,11 +36,32 @@ class ExportCommand implements DiscordCommand {
             punches = await this.request.dataAccess.getPunches(employees.map(e => e.DiscordId), timeLoggedCriteria);
         } catch (err) {
             console.log(err);
-            await this.request.message.replyCallback('There was an issue completing your request.  Please try again later.\r\nIf this issue persists let an administrator know.');
+            await this.request.message.replyCallback('There was an issue completing your request, please try again later.\r\nIf this issue persists let an administrator know.');
             return;
         }
 
-        await this.request.message.replyCallback('Export Complete, please see attached file for export results.');
+        const employeePunches: EmployeePunchRecords[] = [];
+        punches.forEach((p) => {
+            const existingEmployeeRecordIndex = employeePunches.findIndex(e => e.employee.DiscordId === p.DiscordId);
+            if (existingEmployeeRecordIndex > 0) {
+                employeePunches[existingEmployeeRecordIndex].punches.push(p);
+            } else {
+                const employee = employees.find(e => e.DiscordId === p.DiscordId);
+                employeePunches.push({ employee, punches: [p] } as EmployeePunchRecords);
+            }
+        });
+
+        if (!employeePunches || employeePunches.length === 0) {
+            // No results
+            await this.request.message.replyCallback('There is nothing to export for this criteria.');
+            return;
+        }
+
+        const str = employeePunchRecordsToCsv(employeePunches);
+        const path = `${this.fileLocation}${timeLoggedCriteria}_${Date.now()}.csv`
+        await this.request.dataAccess.writeAsync(path, str);
+
+        await this.request.message.replyCallback('Export Complete, please see attached file for export results.', { files: [path] });
     }
 }
 

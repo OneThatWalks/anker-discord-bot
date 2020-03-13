@@ -56,6 +56,9 @@ describe('Export Command', () => {
                     Email: 'test3@test.com'
                 }
             ]));
+        mockDataAccess
+            .setup(instance => instance.writeAsync(It.IsAny<string>(), It.IsAny<string>()))
+            .returns(Promise.resolve());
 
         mockRequest = new Mock<DiscordRequest>();
         mockRequest
@@ -140,5 +143,32 @@ describe('Export Command', () => {
         // Assert
         mockMessageWrapper
             .verify(instance => instance.replyCallback(It.IsAny<string>()));
+    });
+
+    it('should call writeAsync', async () => {
+        // Arrange
+
+        // Act
+        await command.execute();
+
+        // Assert
+        mockDataAccess
+            .verify(instance => instance.writeAsync(It.IsAny<string>(), It.IsAny<string>()), Times.Once());
+    });
+
+    it('should reply no results', async () => {
+        // Arrange
+        mockDataAccess
+            .setup(instance => instance.getPunches(It.IsAny<string[]>(), It.IsAny<TimeLoggedCriteria>()))
+            .returns([]);
+
+        // Act
+        await command.execute();
+
+        // Assert
+        mockDataAccess
+            .verify(instance => instance.writeAsync(It.IsAny<string>(), It.IsAny<string>()), Times.Never());
+        mockMessageWrapper
+            .verify(instance => instance.replyCallback(It.Is<string>(s => s.includes('nothing to export'))));
     });
 });
