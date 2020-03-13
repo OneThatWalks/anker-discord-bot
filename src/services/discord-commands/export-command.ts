@@ -61,7 +61,7 @@ class ExportCommand implements DiscordCommand {
         const path = `${this.fileLocation}${timeLoggedCriteria}_${Date.now()}.csv`
         await this.request.dataAccess.writeAsync(path, str);
 
-        await this.request.message.replyCallback('Export Complete, please see attached file for export results.', { files: [path] });
+        await this.request.message.replyCallback('your export is complete. Please see attached file for export results.', { files: [path] });
     }
 }
 
