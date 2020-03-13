@@ -23,6 +23,7 @@ class TimeClockRepo implements ITimeClockRepo {
             db.get(sql, [discordId], (err: Error, row: TimeClockRecord) => {
                 if (err) {
                     rej(err);
+                    return;
                 }
 
                 // Sqlite does not bind correctly to Date type
@@ -43,11 +44,12 @@ class TimeClockRepo implements ITimeClockRepo {
         const [start, end] = getDatesFromCriteria(criteria);
 
         return await DatabaseUtil.executeResultsAsync<TimeClockRecord[]>(this.appConfig.sqlite.databasePath, (db: Database) => new Promise((res, rej) => {
-            const sql = `SELECT * FROM TimeClock WHERE DiscordId IN (${discordIds.map((value: string, index: number) => `'${value}'${index === discordIds.length - 1 ? '' : ','}`)}) AND LoginDateTimeUtc > '${start.toISOString()}' AND LogoutDateTimeUtc < '${end.toISOString()}' ORDER BY LoginDateTimeUtc DESC, LogoutDateTimeUtc DESC LIMIT 1;`;
+            const sql = `SELECT * FROM TimeClock WHERE DiscordId IN (${discordIds.map(d => `?`).join(',')}) AND LoginDateTimeUtc > '${start.toISOString()}' AND LogoutDateTimeUtc < '${end.toISOString()}' ORDER BY LoginDateTimeUtc DESC, LogoutDateTimeUtc DESC LIMIT 1;`;
 
             db.all(sql, [...discordIds,], (err: Error, rows: TimeClockRecord[]) => {
                 if (err) {
                     rej(err);
+                    return;
                 }
 
                 // Fix sqlite dates
@@ -82,6 +84,7 @@ class TimeClockRepo implements ITimeClockRepo {
             db.run(sql, [discordId, date.toISOString()], (err) => {
                 if (err) {
                     rej(err);
+                    return;
                 }
 
                 res();
@@ -104,6 +107,7 @@ class TimeClockRepo implements ITimeClockRepo {
             db.run(sql, [date.toISOString(), discordId, lastClock.LoginDateTimeUtc.toISOString()], (err) => {
                 if (err) {
                     rej(err);
+                    return;
                 }
 
                 res();
@@ -125,6 +129,7 @@ class TimeClockRepo implements ITimeClockRepo {
             db.all(sql, (err: Error, rows: TimeLoggedResult[]) => {
                 if (err) {
                     rej(err);
+                    return;
                 }
 
                 res(rows);
