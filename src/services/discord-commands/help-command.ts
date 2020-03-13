@@ -45,6 +45,12 @@ class HelpCommand implements DiscordCommand {
 
             \`!time [today | yesterday | week | month | year | all]\`
             Gets your hours logged for specified criteria
+
+            \`!export\`
+            Gets all logged time for last month and exports it as a csv
+
+            \`!export [today | yesterday | week | last-week | month | last-month | year |last-year | all]\`
+            Gets all logged time for the specified criteria and exports it as a csv
             `
         );
     }
