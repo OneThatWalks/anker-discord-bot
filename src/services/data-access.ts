@@ -39,8 +39,8 @@ class DataAccess implements IDataAccess {
         return this.timeClockRepo.recordLogin(discordId, date);
     }
 
-    recordLogout(discordId: string, date: Date): Promise<Date> {
-        return this.timeClockRepo.recordLogout(discordId, date);
+    recordLogout(discordId: string, date: Date, loginDate: Date): Promise<Date> {
+        return this.timeClockRepo.recordLogout(discordId, date, loginDate);
     }
 
     getTimeLogged(discordIds: string[], criteria: TimeLoggedCriteria): Promise<TimeLoggedResult[]> {
@@ -49,6 +49,10 @@ class DataAccess implements IDataAccess {
 
     getPunches(discordIds: string[], criteria: TimeLoggedCriteria): Promise<TimeClockRecord[]> {
         return this.timeClockRepo.getPunches(discordIds, criteria);
+    }
+
+    lastClock(discordId: string): Promise<TimeClockRecord> {
+        return this.timeClockRepo.lastClock(discordId)
     }
 
     getSchedules(...employees: Employee[]): Promise<Schedule[]> {
