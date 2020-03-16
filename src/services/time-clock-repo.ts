@@ -17,7 +17,7 @@ class TimeClockRepo implements ITimeClockRepo {
 
     public async lastClock(discordId: string): Promise<TimeClockRecord> {
         return await DatabaseUtil.executeResultsAsync<TimeClockRecord>(this.appConfig.sqlite.databasePath, (db: Database) => new Promise((res, rej) => {
-            const sql = 'SELECT * FROM TimeClock WHERE DiscordId = ? AND LogoutDateTimeUtc IS NULL ORDER BY LoginDateTimeUtc DESC, LogoutDateTimeUtc DESC LIMIT 1;';
+            const sql = 'SELECT * FROM TimeClock WHERE DiscordId = ? ORDER BY LoginDateTimeUtc DESC, LogoutDateTimeUtc DESC LIMIT 1;';
 
             db.get(sql, [discordId], (err: Error, row: TimeClockRecord) => {
                 if (err) {
@@ -87,11 +87,11 @@ class TimeClockRepo implements ITimeClockRepo {
         return date;
     }
 
-    async recordLogout(discordId: string, date: Date): Promise<Date> {
+    async recordLogout(discordId: string, date: Date, loginDate: Date): Promise<Date> {
         await DatabaseUtil.executeNonQueryDb(this.appConfig.sqlite.databasePath, (db: Database) => new Promise((res, rej) => {
             const sql = `UPDATE TimeClock SET LogoutDateTimeUtc = ? WHERE DiscordId = ? AND LoginDateTimeUtc = ?;`;
 
-            db.run(sql, [date.toISOString(), discordId, lastClock.LoginDateTimeUtc.toISOString()], (err) => {
+            db.run(sql, [date.toISOString(), discordId, loginDate.toISOString()], (err) => {
                 if (err) {
                     rej(err);
                     return;

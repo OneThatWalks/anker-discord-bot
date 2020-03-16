@@ -50,7 +50,7 @@ class LogoutCommand implements DiscordCommand {
         }
 
         try {
-            const dateObj = await this.request.dataAccess.recordLogout(this.request.message.authorId, date);
+            const dateObj = await this.request.dataAccess.recordLogout(this.request.message.authorId, date, lastClock.LoginDateTimeUtc);
             this.request.message.replyCallback(`Successfully logged out at \`${dateObj.toLocaleString()}\``);
         } catch (err) {
             this.request.message.replyCallback((err as Error).message);

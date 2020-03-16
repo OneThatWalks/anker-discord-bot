@@ -189,7 +189,7 @@ describe('Logout Command', () => {
                 });
             });
         mockDataAccess
-            .setup(instance => instance.recordLogout(It.IsAny(), It.IsAny<Date>()))
+            .setup(instance => instance.recordLogout(It.IsAny(), It.IsAny<Date>(), It.IsAny<Date>()))
             .returns(Promise.resolve());
 
         mockRequest = new Mock<DiscordRequest>();
@@ -214,7 +214,7 @@ describe('Logout Command', () => {
         await service.execute();
 
         // Assert
-        mockDataAccess.verify(instance => instance.recordLogout(It.IsAny(), It.IsAny<Date>()), Times.Exactly(1));
+        mockDataAccess.verify(instance => instance.recordLogout(It.IsAny(), It.IsAny<Date>(), It.IsAny<Date>()), Times.Exactly(1));
     });
 
     it('should reply', async () => {
@@ -237,7 +237,7 @@ describe('Logout Command', () => {
         await service.execute();
 
         // Assert
-        mockDataAccess.verify(instance => instance.recordLogout(It.IsAny<string>(), It.IsAny<Date>()), Times.Never());
+        mockDataAccess.verify(instance => instance.recordLogout(It.IsAny<string>(), It.IsAny<Date>(), It.IsAny<Date>()), Times.Never());
         mockMessage.verify(instance => instance.replyCallback(It.Is<string>(s => s.includes('please try again'))), Times.Once());
     });
 
@@ -251,7 +251,7 @@ describe('Logout Command', () => {
         await service.execute();
 
         // Assert
-        mockDataAccess.verify(instance => instance.recordLogout(It.IsAny<string>(), It.IsAny<Date>()), Times.Once());
+        mockDataAccess.verify(instance => instance.recordLogout(It.IsAny<string>(), It.IsAny<Date>(), It.IsAny<Date>()), Times.Once());
     });
 
     it('should reply error when last clock fails', async () => {
@@ -265,7 +265,7 @@ describe('Logout Command', () => {
 
         // Assert
         mockMessage.verify(instance => instance.replyCallback(It.Is<string>(s => s.includes('please try again'))), Times.Once());
-        mockDataAccess.verify(instance => instance.recordLogout(It.IsAny<string>(), It.IsAny<Date>()), Times.Never());
+        mockDataAccess.verify(instance => instance.recordLogout(It.IsAny<string>(), It.IsAny<Date>(), It.IsAny<Date>()), Times.Never());
     });
 
     it('should reply previous clock in when previous logout detected', async () => {
@@ -289,7 +289,7 @@ describe('Logout Command', () => {
 
         // Assert
         mockMessage.verify(instance => instance.replyCallback(It.Is<string>(s => s.includes('Previous clock out detected'))), Times.Once());
-        mockDataAccess.verify(instance => instance.recordLogout(It.IsAny<string>(), It.IsAny<Date>()), Times.Never());
+        mockDataAccess.verify(instance => instance.recordLogout(It.IsAny<string>(), It.IsAny<Date>(), It.IsAny<Date>()), Times.Never());
     });
 
     it('should reply error when logout before last login', async () => {
@@ -303,7 +303,7 @@ describe('Logout Command', () => {
 
         // Assert
         mockMessage.verify(instance => instance.replyCallback(It.Is<string>(s => s.includes('There was an issue'))), Times.Once());
-        mockDataAccess.verify(instance => instance.recordLogout(It.IsAny<string>(), It.IsAny<Date>()), Times.Never());
+        mockDataAccess.verify(instance => instance.recordLogout(It.IsAny<string>(), It.IsAny<Date>(), It.IsAny<Date>()), Times.Never());
     });
 
 });

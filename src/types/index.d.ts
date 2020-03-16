@@ -22,7 +22,7 @@ export interface IEmployeeRepo {
 
 export interface ITimeClockRepo {
     recordLogin(discordId: string, date: Date): Promise<Date>;
-    recordLogout(discordId: string, date: Date): Promise<Date>;
+    recordLogout(discordId: string, date: Date, loginDate: Date): Promise<Date>;
     getTimeLogged(discordIds: string[], criteria: TimeLoggedCriteria): Promise<TimeLoggedResult[]>;
     getPunches(discordIds: string[], criteria: TimeLoggedCriteria): Promise<TimeClockRecord[]>;
     lastClock(discordId: string): Promise<TimeClockRecord>;
