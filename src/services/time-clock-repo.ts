@@ -3,7 +3,6 @@ import AppConfig from '../models/app-config';
 import { ITimeClockRepo, TimeClockRecord, TimeLoggedCriteria, TimeLoggedResult } from '../types';
 import DatabaseUtil from './db-util';
 import { Database } from 'sqlite3';
-import { isNullOrUndefined } from 'util';
 import { getDatesFromCriteria } from '../util';
 
 @injectable()
@@ -16,9 +15,9 @@ class TimeClockRepo implements ITimeClockRepo {
 
     }
 
-    private async lastClock(discordId: string): Promise<TimeClockRecord> {
+    public async lastClock(discordId: string): Promise<TimeClockRecord> {
         return await DatabaseUtil.executeResultsAsync<TimeClockRecord>(this.appConfig.sqlite.databasePath, (db: Database) => new Promise((res, rej) => {
-            const sql = 'SELECT * FROM TimeClock WHERE DiscordId = ? AND LogoutDateTimeUtc IS NULL ORDER BY LoginDateTimeUtc DESC, LogoutDateTimeUtc DESC LIMIT 1;';
+            const sql = 'SELECT * FROM TimeClock WHERE DiscordId = ? ORDER BY LoginDateTimeUtc DESC, LogoutDateTimeUtc DESC LIMIT 1;';
 
             db.get(sql, [discordId], (err: Error, row: TimeClockRecord) => {
                 if (err) {
@@ -72,12 +71,6 @@ class TimeClockRepo implements ITimeClockRepo {
     }
 
     async recordLogin(discordId: string, date: Date): Promise<Date> {
-        const lastClock = await this.lastClock(discordId);
-
-        if (lastClock && isNullOrUndefined(lastClock.LogoutDateTimeUtc)) {
-            throw new Error(`There was an issue logging in.  Previous clock in detected at ${lastClock.LoginDateTimeUtc.toLocaleString()}.`);
-        }
-
         await DatabaseUtil.executeNonQueryDb(this.appConfig.sqlite.databasePath, (db: Database) => new Promise((res, rej) => {
             const sql = `INSERT INTO TimeClock (DiscordId, LoginDateTimeUtc) VALUES (?, ?);`;
 
@@ -94,17 +87,11 @@ class TimeClockRepo implements ITimeClockRepo {
         return date;
     }
 
-    async recordLogout(discordId: string, date: Date): Promise<Date> {
-        const lastClock = await this.lastClock(discordId);
-
-        if (!lastClock || lastClock.LogoutDateTimeUtc) {
-            throw new Error(`There was an issue logging out.  Previous clock out detected at ${lastClock?.LogoutDateTimeUtc?.toLocaleString() ?? 'never'}.`);
-        }
-
+    async recordLogout(discordId: string, date: Date, loginDate: Date): Promise<Date> {
         await DatabaseUtil.executeNonQueryDb(this.appConfig.sqlite.databasePath, (db: Database) => new Promise((res, rej) => {
             const sql = `UPDATE TimeClock SET LogoutDateTimeUtc = ? WHERE DiscordId = ? AND LoginDateTimeUtc = ?;`;
 
-            db.run(sql, [date.toISOString(), discordId, lastClock.LoginDateTimeUtc.toISOString()], (err) => {
+            db.run(sql, [date.toISOString(), discordId, loginDate.toISOString()], (err) => {
                 if (err) {
                     rej(err);
                     return;

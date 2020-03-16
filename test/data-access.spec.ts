@@ -95,13 +95,13 @@ describe('Data Access', () => {
     describe('recordLogout()', () => {
         it('should call time clock repo', async () => {
             // Arrange
-            mockTimeClockRepo.setup(instance => instance.recordLogout(It.IsAny<string>(), It.IsAny<Date>())).returns(Promise.resolve());
+            mockTimeClockRepo.setup(instance => instance.recordLogout(It.IsAny<string>(), It.IsAny<Date>(), It.IsAny<Date>())).returns(Promise.resolve());
 
             // Act
-            await service.recordLogout('123', new Date());
+            await service.recordLogout('123', new Date(), new Date());
 
             // Assert
-            mockTimeClockRepo.verify(instance => instance.recordLogout(It.IsAny<string>(), It.IsAny<Date>()), Times.Exactly(1));
+            mockTimeClockRepo.verify(instance => instance.recordLogout(It.IsAny<string>(), It.IsAny<Date>(), It.IsAny<Date>()), Times.Exactly(1));
         });
     });
 
