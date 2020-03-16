@@ -39,7 +39,7 @@ export function parseTimeFromArgs(args: string[]): Date {
     // Pull out args that match (ie: start with @)
     const timeArg: string[] = args?.filter((item: string) => item.startsWith('@')) ?? null;
 
-    if (!timeArg) {
+    if (!timeArg || timeArg.length === 0) {
         return null;
     }
 
