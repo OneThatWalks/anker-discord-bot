@@ -27,11 +27,11 @@ class TimeClockRepo implements ITimeClockRepo {
                 }
 
                 // Sqlite does not bind correctly to Date type
-                if (row.LoginDateTimeUtc) {
+                if (row?.LoginDateTimeUtc) {
                     row.LoginDateTimeUtc = new Date(row.LoginDateTimeUtc);
                 }
 
-                if (row.LogoutDateTimeUtc) {
+                if (row?.LogoutDateTimeUtc) {
                     row.LogoutDateTimeUtc = new Date(row.LogoutDateTimeUtc);
                 }
 
