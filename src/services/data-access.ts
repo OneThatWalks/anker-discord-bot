@@ -51,6 +51,10 @@ class DataAccess implements IDataAccess {
         return this.timeClockRepo.getPunches(discordIds, criteria);
     }
 
+    lastClock(discordId: string): Promise<TimeClockRecord> {
+        return this.timeClockRepo.lastClock(discordId)
+    }
+
     getSchedules(...employees: Employee[]): Promise<Schedule[]> {
         return this.scheduleRepo.getSchedules(...employees);
     }

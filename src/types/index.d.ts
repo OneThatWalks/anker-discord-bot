@@ -25,6 +25,7 @@ export interface ITimeClockRepo {
     recordLogout(discordId: string, date: Date): Promise<Date>;
     getTimeLogged(discordIds: string[], criteria: TimeLoggedCriteria): Promise<TimeLoggedResult[]>;
     getPunches(discordIds: string[], criteria: TimeLoggedCriteria): Promise<TimeClockRecord[]>;
+    lastClock(discordId: string): Promise<TimeClockRecord>;
 }
 
 export interface IScheduleRepo {

@@ -16,7 +16,7 @@ class TimeClockRepo implements ITimeClockRepo {
 
     }
 
-    private async lastClock(discordId: string): Promise<TimeClockRecord> {
+    public async lastClock(discordId: string): Promise<TimeClockRecord> {
         return await DatabaseUtil.executeResultsAsync<TimeClockRecord>(this.appConfig.sqlite.databasePath, (db: Database) => new Promise((res, rej) => {
             const sql = 'SELECT * FROM TimeClock WHERE DiscordId = ? AND LogoutDateTimeUtc IS NULL ORDER BY LoginDateTimeUtc DESC, LogoutDateTimeUtc DESC LIMIT 1;';
 
