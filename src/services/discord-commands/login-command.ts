@@ -46,7 +46,7 @@ class LoginCommand implements DiscordCommand {
 
         // The current time argument should not occur before the last clock
         if (lastClock && (lastClock.LogoutDateTimeUtc > date)) {
-            const previousClockOutMessage = `Previous clock out detected at ${lastClock.LoginDateTimeUtc.toLocaleString()}, you may not login before your last log out.`;
+            const previousClockOutMessage = `Previous clock out detected at ${lastClock.LogoutDateTimeUtc.toLocaleString()}, you may not login before your last log out.`;
             console.warn(`User [${this.request.message.authorId}], ${previousClockOutMessage}`);
             await this.request.message.replyCallback(`There was an issue logging in.  ${previousClockOutMessage}`);
             return;

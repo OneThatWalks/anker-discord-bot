@@ -1,4 +1,4 @@
-import { DiscordCommand, DiscordRequest } from "../../types";
+import { DiscordCommand, DiscordRequest, TimeClockRecord } from "../../types";
 import { parseTimeFromArgs } from "../../util";
 
 /**
@@ -20,6 +20,32 @@ class LogoutCommand implements DiscordCommand {
 
         if (date >= buffer) {
             this.request.message.replyCallback(`You may not specify a time more than 7 minutes in the future, please try again.`);
+            return;
+        }
+
+        let lastClock: TimeClockRecord;
+        try {
+            lastClock = await this.request.dataAccess.lastClock(this.request.message.authorId);
+        } catch (err) {
+            console.error(err);
+            await this.request.message.replyCallback('There was an issue logging out, please try again.\r\nIf this issue persists please let an administrator know.');
+            return;
+        }
+
+        // Make sure a logout is allowed
+        // Last clock should NOT have a logout date time
+        if (!lastClock || lastClock.LogoutDateTimeUtc) {
+            const previousClockInMessage = `Previous clock out detected at ${lastClock?.LogoutDateTimeUtc?.toLocaleString() ?? 'never'}.`;
+            console.warn(`User [${this.request.message.authorId}], ${previousClockInMessage}`);
+            await this.request.message.replyCallback(`There was an issue logging out.  ${previousClockInMessage}`);
+            return;
+        }
+
+        // The current time argument should not occur before the last clock
+        if (lastClock && (lastClock.LoginDateTimeUtc > date)) {
+            const previousClockOutMessage = `Previous clock in detected at ${lastClock.LoginDateTimeUtc.toLocaleString()}, you may not logout before your last log in.`;
+            console.warn(`User [${this.request.message.authorId}], ${previousClockOutMessage}`);
+            await this.request.message.replyCallback(`There was an issue logging out.  ${previousClockOutMessage}`);
             return;
         }
 

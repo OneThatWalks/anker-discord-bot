@@ -88,12 +88,6 @@ class TimeClockRepo implements ITimeClockRepo {
     }
 
     async recordLogout(discordId: string, date: Date): Promise<Date> {
-        const lastClock = await this.lastClock(discordId);
-
-        if (!lastClock || lastClock.LogoutDateTimeUtc) {
-            throw new Error(`There was an issue logging out.  Previous clock out detected at ${lastClock?.LogoutDateTimeUtc?.toLocaleString() ?? 'never'}.`);
-        }
-
         await DatabaseUtil.executeNonQueryDb(this.appConfig.sqlite.databasePath, (db: Database) => new Promise((res, rej) => {
             const sql = `UPDATE TimeClock SET LogoutDateTimeUtc = ? WHERE DiscordId = ? AND LoginDateTimeUtc = ?;`;
 
