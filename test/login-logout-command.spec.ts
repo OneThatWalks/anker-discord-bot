@@ -95,7 +95,7 @@ describe('Login Command', () => {
         // Arrange
         const date = new Date();
         date.setMinutes(date.getMinutes() + 6);
-        mockRequest.setup(instance => instance.args).returns([`@${date.getHours()}`]);
+        mockRequest.setup(instance => instance.args).returns([`@${date.getHours()}:${date.getMinutes()}`]);
 
         // Act
         await service.execute();
@@ -245,7 +245,7 @@ describe('Logout Command', () => {
         // Arrange
         const date = new Date();
         date.setMinutes(date.getMinutes() + 6);
-        mockRequest.setup(instance => instance.args).returns([`@${date.getHours()}`]);
+        mockRequest.setup(instance => instance.args).returns([`@${date.getHours()}:${date.getMinutes()}`]);
 
         // Act
         await service.execute();
