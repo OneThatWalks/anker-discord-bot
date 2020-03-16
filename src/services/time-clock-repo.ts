@@ -3,7 +3,6 @@ import AppConfig from '../models/app-config';
 import { ITimeClockRepo, TimeClockRecord, TimeLoggedCriteria, TimeLoggedResult } from '../types';
 import DatabaseUtil from './db-util';
 import { Database } from 'sqlite3';
-import { isNullOrUndefined } from 'util';
 import { getDatesFromCriteria } from '../util';
 
 @injectable()
@@ -72,12 +71,6 @@ class TimeClockRepo implements ITimeClockRepo {
     }
 
     async recordLogin(discordId: string, date: Date): Promise<Date> {
-        const lastClock = await this.lastClock(discordId);
-
-        if (lastClock && isNullOrUndefined(lastClock.LogoutDateTimeUtc)) {
-            throw new Error(`There was an issue logging in.  Previous clock in detected at ${lastClock.LoginDateTimeUtc.toLocaleString()}.`);
-        }
-
         await DatabaseUtil.executeNonQueryDb(this.appConfig.sqlite.databasePath, (db: Database) => new Promise((res, rej) => {
             const sql = `INSERT INTO TimeClock (DiscordId, LoginDateTimeUtc) VALUES (?, ?);`;
 
