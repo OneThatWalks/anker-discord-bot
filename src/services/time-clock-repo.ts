@@ -43,7 +43,7 @@ class TimeClockRepo implements ITimeClockRepo {
         const [start, end] = getDatesFromCriteria(criteria);
 
         return await DatabaseUtil.executeResultsAsync<TimeClockRecord[]>(this.appConfig.sqlite.databasePath, (db: Database) => new Promise((res, rej) => {
-            const sql = `SELECT * FROM TimeClock WHERE DiscordId IN (${discordIds.map(d => `?`).join(',')}) AND LoginDateTimeUtc > '${start.toISOString()}' AND LogoutDateTimeUtc < '${end.toISOString()}' ORDER BY LoginDateTimeUtc DESC, LogoutDateTimeUtc DESC LIMIT 1;`;
+            const sql = `SELECT DiscordId, LoginDateTimeUtc, LogoutDateTimeUtc FROM \`TimeClock\` WHERE DiscordId IN (${discordIds.map(d => `?`).join(',')}) AND LoginDateTimeUtc > '${start.toISOString()}' AND LogoutDateTimeUtc < '${end.toISOString()}' ORDER BY LoginDateTimeUtc DESC, LogoutDateTimeUtc DESC;`;
 
             db.all(sql, [...discordIds,], (err: Error, rows: TimeClockRecord[]) => {
                 if (err) {
