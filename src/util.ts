@@ -213,7 +213,7 @@ export function employeePunchRecordsToCsv(employeePunchRecords: EmployeePunchRec
     employeePunchRecords.forEach(ep => {
         const employeeRow = `${ep.employee.Name},,,\r\n`
 
-        const sortedDates = ep.punches.sort((a, b) => +b.LoginDateTimeUtc - +a.LoginDateTimeUtc);
+        const sortedDates = ep.punches.sort((a, b) => +a.LoginDateTimeUtc - +b.LoginDateTimeUtc);
 
         let days = '';
 
