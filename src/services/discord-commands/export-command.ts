@@ -43,7 +43,7 @@ class ExportCommand implements DiscordCommand {
         const employeePunches: EmployeePunchRecords[] = [];
         punches.forEach((p) => {
             const existingEmployeeRecordIndex = employeePunches.findIndex(e => e.employee.DiscordId === p.DiscordId);
-            if (existingEmployeeRecordIndex > 0) {
+            if (existingEmployeeRecordIndex > -1) {
                 employeePunches[existingEmployeeRecordIndex].punches.push(p);
             } else {
                 const employee = employees.find(e => e.DiscordId === p.DiscordId);
