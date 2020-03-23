@@ -3,7 +3,7 @@
   "version": "1.0.0-alpha.2",
   "description": "A discord bot for The Anker Consulting Group",
   "scripts": {
-    "start": "node dist/index.js",
+    "start": "node ./dist/index.js -configFile \"config.json\"",
     "watch": "tsc -w",
     "build": "tsc -b",
     "rebuild": "yarn clean && yarn build",
@@ -21,28 +21,28 @@
     "node": ">=13.7.0"
   },
   "devDependencies": {
-    "@types/node": "^13.7.6",
-    "@types/sqlite3": "^3.1.6",
-    "@types/ws": "^7.2.2",
-    "discord.js": "discordjs/discord.js",
-    "googleapis": "^47.0.0",
-    "reflect-metadata": "^0.1.13",
-    "rimraf": "^3.0.2",
-    "sqlite3": "^4.1.1",
-    "ts-node": "^8.6.2",
-    "tsyringe": "^4.0.1",
-    "typescript": "^3.7.5"
-  },
-  "dependencies": {
     "@types/chai": "^4.2.8",
     "@types/mocha": "^7.0.1",
     "@typescript-eslint/eslint-plugin": "^2.21.0",
     "@typescript-eslint/parser": "^2.21.0",
+    "@types/node": "^13.7.6",
+    "@types/sqlite3": "^3.1.6",
+    "@types/ws": "^7.2.2",
     "chai": "^4.2.0",
     "eslint": "^6.8.0",
     "mocha": "^7.1.0",
     "moq.ts": "^5.0.5",
+    "rimraf": "^3.0.2",
+    "ts-node": "^8.6.2",
+    "typescript": "^3.7.5"
+  },
+  "dependencies": {
+    "discord.js": "discordjs/discord.js",
+    "googleapis": "^47.0.0",
     "organize-imports-cli": "^0.7.0",
-    "tslint": "^6.0.0"
+    "reflect-metadata": "^0.1.13",
+    "sqlite3": "^4.1.1",
+    "tslint": "^6.0.0",
+    "tsyringe": "^4.0.1"
   }
 }

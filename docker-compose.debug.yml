@@ -1,0 +1,11 @@
+version: '3.4'
+
+services:
+  anker-discord-bot:
+    image: anker-discord-bot
+    build: .
+    environment:
+      NODE_ENV: development
+    ports:
+      - 9229:9229
+    command: node --inspect=0.0.0.0:9229 dist/index.js
